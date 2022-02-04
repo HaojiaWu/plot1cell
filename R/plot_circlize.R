@@ -175,12 +175,18 @@ plot_circlize <- function(
   ) {
   data_plot %>%
     dplyr::group_by(Cluster) %>%
-    summarize(x = median(x = x),y = median(x = y)) -> centers
+    summarise(x = median(x = x), y = median(x = y)) -> centers
   z <- MASS::kde2d(data_plot$x, data_plot$y, n=kde2d.n)
   celltypes<-names(table(data_plot$Cluster))
   cell_colors <- scales::hue_pal()(length(celltypes))
   if(!is.null(col.use)){
     cell_colors=col.use
+    col_df<-data.frame(Cluster=celltypes, color2=col.use)
+    cells_order<-rownames(data_plot)
+    data_plot<-merge(data_plot, col_df, by="Cluster")
+    rownames(data_plot)<-data_plot$cells
+    data_plot<-data_plot[cells_order,]
+    data_plot$Colors<-data_plot$color2
   }
   circos.clear()
   par(bg = bg.color)

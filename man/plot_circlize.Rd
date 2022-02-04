@@ -11,7 +11,8 @@ plot_circlize(
   pt.size = 0.5,
   kde2d.n = 1000,
   contour.nlevels = 100,
-  bg.color = "#F9F2E4"
+  bg.color = "#F9F2E4",
+  col.use = NULL
 )
 }
 \arguments{

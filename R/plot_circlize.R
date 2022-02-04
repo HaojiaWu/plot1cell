@@ -170,7 +170,8 @@ plot_circlize <- function(
   pt.size = 0.5,
   kde2d.n = 1000,
   contour.nlevels = 100,
-  bg.color='#F9F2E4'
+  bg.color='#F9F2E4',
+  col.use=NULL
   ) {
   data_plot %>%
     dplyr::group_by(Cluster) %>%
@@ -178,6 +179,9 @@ plot_circlize <- function(
   z <- MASS::kde2d(data_plot$x, data_plot$y, n=kde2d.n)
   celltypes<-names(table(data_plot$Cluster))
   cell_colors <- scales::hue_pal()(length(celltypes))
+  if(!is.null(col.use)){
+    cell_colors=col.use
+  }
   circos.clear()
   par(bg = bg.color)
   circos.par(cell.padding=c(0,0,0,0), track.margin=c(0.01,0),"track.height" = 0.01, gap.degree =c(rep(2, (length(celltypes)-1)),12))

@@ -327,3 +327,39 @@ data_processing <- function(
   Sys.time()
 }
 
+
+#' A function to extract gene counts for ploting
+#'
+#' This function is a modified Seurat::FetchData function to extract gene 
+#' counts and the associated meta data for ploting. It returns a dataframe
+#' with the requested information from the Seurat object.
+#'
+#' @param seu A finished Seurat Object with cell type annotation in the active.ident slot
+#' @param features Gene names to extract expression data
+#' @param cell.types The cell types to be inspected. By default, it will incorporate all cell types.
+#' @param data.type The data slot to be accessed. By default, the "data" slot will be used.
+#' @param meta.groups The colnames in the meta.data slot you want to include.
+#' @return A data frame with the requested info.
+#' @export
+#' 
+extract_gene_count <- function(
+  seu, 
+  features, 
+  cell.types=NULL, 
+  data.type="data", 
+  meta.groups=NULL
+ ){
+  if(is.null(cell.types)){
+    cell.types=levels(seu)
+  }
+  seu@meta.data$celltype<-as.character(seu@active.ident)
+  if(is.null(meta.groups)){
+    meta.groups=colnames(seu@meta.data)
+  }
+  new_seu<-subset(seu, idents=cell.types)
+  feature_count<-Seurat::FetchData(new_seu, slot = data.type, vars = c(features,meta.groups,"celltype"))
+  umap_data<-data.frame(new_seu[["umap"]]@cell.embeddings)
+  feature_count$UMAP1<-umap_data$UMAP_1
+  feature_count$UMAP2<-umap_data$UMAP_2
+  feature_count
+}

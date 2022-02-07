@@ -29,31 +29,20 @@ modified_dotplot <- function(
     'radius' = scale_radius,
     stop("'scale.by' must be either 'size' or 'radius'")
   )
-  
+  dotplot<-ggplot(dataplot, aes(x = features.plot, y = id, fill=Avg.Exp)) + 
+    geom_tile(fill="white", color="white") +
+    geom_point(aes( size =Pct.Exp), shape=21, color='grey80')  +  
+    scale_fill_gradientn(colours  =  col_palette)+
+    theme(panel.background = element_rect(fill = "white", colour = "black"),
+          axis.line = element_blank(),axis.text.x = element_text(angle = 45, hjust = 1), 
+          legend.key = element_rect(colour = NA, fill = NA),
+          axis.text = element_text(size = 12),axis.title=element_text(size=8),legend.text=element_text(size=8), 
+          legend.title = element_text(size = 10),legend.position="right", legend.margin=margin())+ylab("")+xlab("")+
+    guides(size = guide_legend(override.aes = list(color='black')))
   if(max(dataplot$Pct.Exp)>=20) {
-    dotplot<-ggplot(dataplot, aes(x = features.plot, y = id, fill=Avg.Exp)) + 
-      geom_tile(fill="white", color="white") +
-      geom_point(aes( size =Pct.Exp), shape=21, color='grey80')  +  
-      scale_fill_gradientn(colours  =  col_palette)+
-      scale_size(range = c(0, 10))+
-      theme(panel.background = element_rect(fill = "white", colour = "black"),
-            axis.line = element_blank(),axis.text.x = element_text(angle = 45, hjust = 1), 
-            legend.key = element_rect(colour = NA, fill = NA),
-            axis.text = element_text(size = 12),axis.title=element_text(size=8),legend.text=element_text(size=8), 
-            legend.title = element_text(size = 10),legend.position="right", legend.margin=margin())+ylab("")+xlab("")+
-      guides(size = guide_legend(override.aes = list(color='black')))
+    dotplot + scale_size(range = c(0, 10))
   } else {
-    dotplot<-ggplot(dataplot, aes(x = features.plot, y = id, fill=Avg.Exp)) +  
-      geom_tile(fill="white", color="white") +
-      geom_point(aes( size =Pct.Exp), shape=21, color='grey80')  +  
-      scale_fill_gradientn(colours  = col_palette)+
-      scale.func(range = c(0, 10), limits = c(0, 20)) +
-      theme(panel.background = element_rect(fill = "white", colour = "black"),
-            axis.line = element_blank(),axis.text.x = element_text(angle = 45, hjust = 1), 
-            legend.key = element_rect(colour = NA, fill = NA),
-            axis.text = element_text(size = 12),axis.title=element_text(size=8),legend.text=element_text(size=8), 
-            legend.title = element_text(size = 10),legend.position="right", legend.margin=margin())+ylab("")+xlab("")+
-      guides(size = guide_legend(override.aes = list(color='black')))
+    dotplot + scale.func(range = c(0, 10), limits = c(0, 20))
   }
   dotplot
 }
@@ -95,3 +84,5 @@ modified_dimplot <- function(
   ylab('UMAP_2')+theme(axis.title.y = element_text(hjust = 0.05, angle = 90, size = 12))+
   ggtitle(title)+theme(plot.title = element_text(hjust = 0.5))
 }
+
+

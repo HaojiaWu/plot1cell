@@ -22,13 +22,15 @@ complex_vlnplot_single(
 
 \item{cell.types}{Cell types of interest. By default, all cell types are included.}
 
-\item{groups}{Groups to split the plot. Support multiple groups.}
+\item{groups}{Groups selected for plotting. Support multiple groups.}
 
 \item{add.dot}{Whether or not to add points on the violins.}
 
 \item{font.size}{Font size for the labels.}
 
 \item{pt.size}{Point size for the data points on the violin}
+
+\item{split.by}{Group to split the gene expression. Only works when length(groups)==1.}
 }
 \value{
 A ggplot object

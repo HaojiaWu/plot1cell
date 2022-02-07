@@ -46,14 +46,29 @@ complex_vlnplot_single <- function(
               axis.text.y = element_text(size=(font.size-2)),
               legend.title = element_blank(),
               legend.position = 'none',
+              strip.text = element_text( size = font.size),
               plot.title = element_text(size=(font.size+2), hjust = 0.5))
       if(add.dot){
         p = p + geom_quasirandom(size=pt.size, alpha=0.2)
       }
       if(!is.null(split.by)){
         p = p + facet_wrap(as.formula(paste("~", split.by)), scales = 'free_x')
+        g <- ggplot_gtable(ggplot_build(p))
+        strip_t <- which(grepl('strip-t', g$layout$name))
+        strip_r <- which(grepl('strip-r', g$layout$name))
+        strip_both<-c(strip_t, strip_r)
+        ncol <- length(cell.types) + length(names(table(gene_count[,split.by])))
+        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol)
+        k <- 1
+        for (i in strip_both) {
+          j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+          g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+          k <- k+1
+        }
+        print(grid::grid.draw(g))
+      } else {
+        p
       }
-      p
     } else {
       if(is.null(split.by)){
         plot_list<-list()

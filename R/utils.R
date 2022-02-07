@@ -363,3 +363,20 @@ extract_gene_count <- function(
   feature_count$UMAP2<-umap_data$UMAP_2
   feature_count
 }
+
+
+#' A function to change gene name into first letter capital
+#'
+#' The function is modified from this thread: https://stackoverflow.com/questions/18509527/first-letter-to-upper-case/18509816
+#'
+#' @param gene Gene name
+#' @export
+#' 
+
+firstup <- function(
+  gene
+  ){
+  x <- tolower(gene)
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}

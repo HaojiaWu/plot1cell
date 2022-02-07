@@ -11,7 +11,8 @@ complex_vlnplot_single(
   groups,
   add.dot = T,
   font.size = 14,
-  pt.size = 0.1
+  pt.size = 0.1,
+  split.by = NULL
 )
 }
 \arguments{

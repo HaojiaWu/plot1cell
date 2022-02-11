@@ -56,9 +56,9 @@ complex_vlnplot_single <- function(
         g <- ggplot_gtable(ggplot_build(p))
         strip_t <- which(grepl('strip-t', g$layout$name))
         strip_r <- which(grepl('strip-r', g$layout$name))
-        strip_both<-c(strip_t, strip_r)
+        strip_both<-c( strip_r,strip_t)
         ncol <- length(cell.types) + length(names(table(gene_count[,split.by])))
-        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol)
+        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
           j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
@@ -114,7 +114,7 @@ complex_vlnplot_single <- function(
         strip_r <- which(grepl('strip-r', g$layout$name))
         strip_both<-c(strip_t, strip_r)
         ncol <- length(cell.types) + length(names(table(gene_count[,split.by])))
-        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(ncol)
+        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
           j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
@@ -137,7 +137,6 @@ complex_vlnplot_single <- function(
               axis.title = element_text(size = font.size), 
               axis.text.x = element_text(size = font.size, angle = 45, hjust = 1, vjust = 1),
               axis.text.y = element_text(size=(font.size-2)),
-              strip.background =element_rect(fill="lemonchiffon1"),
               strip.text = element_text( size = font.size),
               legend.title = element_blank(),
               legend.position = 'none',

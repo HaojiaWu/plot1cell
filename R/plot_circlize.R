@@ -8,7 +8,7 @@
 #' polar coordinates.
 #'
 #' @param coord_data Cartesian coordinates from tSNE, UMAP, etc.
-#' @param zoom value from c(0,1) to adjust the coordinates.
+#' @param zoom Value from c(0,1) to adjust the coordinates.
 #' @return A matrix with polar coordinates
 #' @export
 transform_coordinates <- function(
@@ -215,11 +215,11 @@ plot_circlize <- function(
 #'
 #' This function allows users to add more tracks into the circlize plot
 #' @param data_plot Data for circlize plot 
-#' @param group The group for showing on the new track
+#' @param group The group to be shown on the new track
 #' @param colors Color palette to color the group
 #' @return A new circlize track adding to the current circlize plot
 #' @export
-add_tract <- function(data_plot, group, colors = NULL){
+add_track <- function(data_plot, group, colors = NULL){
   circos.track(data_plot$Cluster, data_plot$x_polar2, y=data_plot$dim2, bg.border=NA)
   celltypes<-names(table(data_plot$Cluster))
   group_names<-names(table(data_plot[,group]))

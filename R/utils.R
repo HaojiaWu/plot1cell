@@ -365,7 +365,7 @@ extract_gene_count <- function(
 }
 
 
-#' A function to change gene name into first letter capital
+#' A function to make gene name first letter capital
 #'
 #' The function is modified from this thread: https://stackoverflow.com/questions/18509527/first-letter-to-upper-case/18509816
 #'
@@ -379,4 +379,37 @@ firstup <- function(
   x <- tolower(gene)
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   x
+}
+
+#' A function to change the strip background color in ggplot
+#' @param ggplt_obj A ggplot object
+#' @param n.color Number of colors.
+#' @param strip.color A color vector
+#' @export
+#' 
+change_strip_background <- function(
+  ggplt_obj, 
+  type = "top",
+  n.color, 
+  strip.color=NULL
+  ){
+  g <- ggplot_gtable(ggplot_build(ggplt_obj))
+  if(type == "top"){
+    strip_both <- which(grepl('strip-t', g$layout$name))
+  } else {
+    strip_t <- which(grepl('strip-t', g$layout$name))
+    strip_r <- which(grepl('strip-r', g$layout$name))
+    strip_both<-c(strip_t, strip_r)
+  }
+  fills <- strip.color
+  if(is.null(strip.color)){
+    fills<- scales::hue_pal()(n.color)
+  } 
+  k <- 1
+  for (i in strip_both) {
+    j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+    g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+    k <- k+1
+  }
+  g
 }

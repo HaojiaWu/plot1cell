@@ -9,7 +9,7 @@ transform_coordinates(coord_data, zoom)
 \arguments{
 \item{coord_data}{Cartesian coordinates from tSNE, UMAP, etc.}
 
-\item{zoom}{value from c(0,1) to adjust the coordinates.}
+\item{zoom}{Value from c(0,1) to adjust the coordinates.}
 }
 \value{
 A matrix with polar coordinates

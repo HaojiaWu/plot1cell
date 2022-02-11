@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{firstup}
 \alias{firstup}
-\title{A function to change gene name into first letter capital}
+\title{A function to make gene name first letter capital}
 \usage{
 firstup(gene)
 }

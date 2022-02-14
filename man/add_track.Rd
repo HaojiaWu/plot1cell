@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_circlize.R
 \name{add_track}
 \alias{add_track}
-\title{Add tracts to the circlize plot}
+\title{Add tracks to the circlize plot}
 \usage{
 add_track(data_plot, group, colors = NULL)
 }

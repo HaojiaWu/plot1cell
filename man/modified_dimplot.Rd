@@ -10,6 +10,7 @@ modified_dimplot(
   pt.size = 0.5,
   label.box = T,
   label.size = 6,
+  do.repel = F,
   title = "UMAP plot"
 )
 }
@@ -25,6 +26,8 @@ modified_dimplot(
 \item{label.size}{Font size of the labels}
 
 \item{title}{Main title of the plot}
+
+\item{do.reple}{Whether or not to repel the cluster annotation}
 }
 \value{
 A ggplot object

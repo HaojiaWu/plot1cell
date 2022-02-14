@@ -211,7 +211,7 @@ plot_circlize <- function(
   }
 }
 
-#' Add tracts to the circlize plot
+#' Add tracks to the circlize plot
 #'
 #' This function allows users to add more tracks into the circlize plot
 #' @param data_plot Data for circlize plot 

@@ -15,6 +15,7 @@
 #' @param splitby The group to separate the gene expression. One of the column names in meta.data.
 #' @param scale.by Methods to scale the dot size. "radius" or "size"
 #' @param strip.color Colors for the strip background
+#' @param do.scale Whether or not to scale the dot when percentage expression of the gene is less than 20.
 #' @return A ggplot object
 #' @export
 complex_dotplot_single <- function(
@@ -23,6 +24,7 @@ complex_dotplot_single <- function(
   groupby,
   splitby=NULL,
   strip.color=NULL,
+  do.scale=T,
   scale.by='radius'
 ){
   if (is.null(levels(seu_obj@meta.data[,groupby]))){
@@ -79,7 +81,7 @@ complex_dotplot_single <- function(
     geom_tile(fill="white", color="white") +
     geom_point(aes( colour=avg.exp, size =pct.exp))  +  
     scale_color_gradientn(colours  =  colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255))+ 
-    theme(axis.line = element_blank(),
+    theme(panel.background = element_rect(fill = "white", colour = "black"),
           axis.text.x = element_text(angle = 45, hjust = 1),
           plot.title = element_text(size = 16,hjust = 0.5, face = 'bold'),
           axis.text = element_text(size = 12),
@@ -88,10 +90,14 @@ complex_dotplot_single <- function(
           legend.title = element_text(size = 12),
           legend.position="right")+
     ylab("")+xlab("")+ggtitle(feature)
-  if(max(data_plot$pct.exp)>=20){
+  if(do.scale){
     p = p + scale_size(range = c(0, 10))
   } else {
-    p = p + scale.func(range = c(0, 10), limits = c(0, 20))
+    if(max(data_plot$pct.exp)>=20){
+      p = p + scale_size(range = c(0, 10))
+    } else {
+      p = p + scale.func(range = c(0, 10), limits = c(0, 20))
+    }
   }
   if(!is.null(splitby)){
     p <- p +facet_wrap(~splitby, scales = 'free_x')
@@ -145,7 +151,7 @@ complex_dotplot_multiple <- function(
     geom_point(aes( colour=avg.exp, size =pct.exp), alpha=0.9)  +  
     scale_color_gradientn(colours  =  grDevices::colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255))+ 
     scale_size(range = c(0, 10))+
-    theme( axis.line = element_blank(),
+    theme(panel.background = element_rect(fill = "white", colour = "black"),
           axis.text.x = element_text(angle = 45, hjust = 1),
           plot.title = element_text(size = 16,hjust = 0.5, face = 'bold'),
           axis.text = element_text(size = 12),

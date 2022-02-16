@@ -10,6 +10,7 @@ complex_dotplot_single(
   groupby,
   splitby = NULL,
   strip.color = NULL,
+  do.scale = T,
   scale.by = "radius"
 )
 }
@@ -23,6 +24,8 @@ complex_dotplot_single(
 \item{splitby}{The group to separate the gene expression. One of the column names in meta.data.}
 
 \item{strip.color}{Colors for the strip background}
+
+\item{do.scale}{Whether or not to scale the dot when percentage expression of the gene is less than 20.}
 
 \item{scale.by}{Methods to scale the dot size. "radius" or "size"}
 }

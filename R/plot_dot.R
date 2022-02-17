@@ -27,18 +27,20 @@ complex_dotplot_single <- function(
   do.scale=T,
   scale.by='radius'
 ){
+  seu_obj@meta.data[,groupby]<-gsub("_","-",seu_obj@meta.data[,groupby])
   if (is.null(levels(seu_obj@meta.data[,groupby]))){
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
   }
   groupby_level<-levels(seu_obj@meta.data[,groupby])
   levels(seu_obj)<-rev(levels(seu_obj))
   celltypes<-levels(seu_obj)
-  celltypes<-gsub("_", ".", celltypes)
+  celltypes<-gsub("_", "-", celltypes)
   seu_obj@meta.data$celltype<-as.character(seu_obj@active.ident)
-  seu_obj@meta.data$celltype<-gsub("_", ".", seu_obj@meta.data$celltype)
+  seu_obj@meta.data$celltype<-gsub("_", "-", seu_obj@meta.data$celltype)
   seu_obj<-SetIdent(seu_obj, value='celltype')
   levels(seu_obj)<-celltypes
   if(!is.null(splitby)){
+    seu_obj@meta.data[,splitby]<-gsub("_","-",seu_obj@meta.data[,splitby])
     if (is.null(levels(seu_obj@meta.data[,splitby]))){
       seu_obj@meta.data[,splitby] <-factor(seu_obj@meta.data[,splitby], levels = names(table(seu_obj@meta.data[,splitby])))
     }

@@ -356,7 +356,9 @@ extract_gene_count <- function(
   if(is.null(meta.groups)){
     meta.groups=colnames(seu@meta.data)
   }
-  new_seu<-subset(seu, idents=cell.types)
+  if(!is.null(cell.types)){
+    new_seu<-subset(seu, idents=cell.types)
+  }
   feature_count<-Seurat::FetchData(new_seu, slot = data.type, vars = c(features,meta.groups,"celltype"))
   umap_data<-data.frame(new_seu[["umap"]]@cell.embeddings)
   feature_count$UMAP1<-umap_data$UMAP_1

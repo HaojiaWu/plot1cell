@@ -25,6 +25,12 @@ complex_featureplot<-function(
   order=F
 ){
   gene_count<-extract_gene_count(seu_obj,features = features, meta.groups = group)
+  if (is.null(levels(seu_obj@meta.data[,group]))){
+    seu_obj@meta.data[,group] <-factor(seu_obj@meta.data[,group], levels = names(table(seu_obj@meta.data[,group])))
+  }
+  group_level<-levels(seu_obj@meta.data[,group])
+  gene_count[,group]<-factor(gene_count[,group],
+                                    levels = group_level)
   if(!is.null(select)){
     gene_count<-gene_count[gene_count[, group] %in% select,]
   }

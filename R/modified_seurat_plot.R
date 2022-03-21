@@ -18,7 +18,7 @@ modified_dotplot <- function(
   levels(seu_obj) <- rev(levels(seu_obj))
   dataplot<-DotPlot(seu_obj, features = features)
   dataplot<-dataplot$data
-  dataplot$avg.exp<-scale(dataplot$avg.exp)
+  dataplot$avg.exp<-dataplot$avg.exp.scaled
   colnames(dataplot)[1:2]<-c('Avg.Exp', 'Pct.Exp')
   if(is.null(col_palette)){
     col_palette = colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255)

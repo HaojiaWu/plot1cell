@@ -36,7 +36,8 @@ Imports:
     GenomeInfoDb,
     EnsDb.Hsapiens.v86,
     cowplot,
-    rlang
+    rlang,
+    GEOquery
 Depends:
     Seurat,
     plotly,
@@ -65,7 +66,8 @@ Depends:
     GenomeInfoDb,
     EnsDb.Hsapiens.v86,
     cowplot,
-    rlang
+    rlang,
+    GEOquery
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true

@@ -26,25 +26,25 @@ transform_coordinates <- function(
 #' This function extracts the metadata from a Seurat object and transforms the
 #' UMAP/tSNE coordinates.
 #'
-#' @param obj SeuratObject
+#' @param seu_obj SeuratObject
 #' @param reductions reductions methods, e.g."umap" or "tsne".
 #' @param color Colors assigned to the cell clusters
 #' @param coord_scale value from c(0,1) to adjust the UMAP/tSNE coordinates.
 #' @return A metadata dataframe
 #' @export
 get_metadata <- function(
-  obj, 
+  seu_obj, 
   reductions = "umap", 
   coord_scale = 0.8, 
   color
   ){
-  metadata<-obj@meta.data
-  metadata$Cluster<-obj@active.ident
-  metadata$dim1<-as.numeric(obj[[reductions]]@cell.embeddings[,1])
-  metadata$dim2<-as.numeric(obj[[reductions]]@cell.embeddings[,2])
+  metadata<-seu_obj@meta.data
+  metadata$Cluster<-seu_obj@active.ident
+  metadata$dim1<-as.numeric(seu_obj[[reductions]]@cell.embeddings[,1])
+  metadata$dim2<-as.numeric(seu_obj[[reductions]]@cell.embeddings[,2])
   metadata$x<-transform_coordinates(metadata$dim1, zoom = coord_scale)
   metadata$y<-transform_coordinates(metadata$dim2, zoom = coord_scale)
-  color_df<-data.frame(Cluster=levels(obj), Colors=color)
+  color_df<-data.frame(Cluster=levels(seu_obj), Colors=color)
   cellnames<-rownames(metadata)
   metadata$cells<-rownames(metadata)
   metadata<-merge(metadata, color_df, by='Cluster')
@@ -58,15 +58,15 @@ get_metadata <- function(
 #' This function labels the cells based their expression levels of the selected 
 #' marker genes.
 #'
-#' @param obj SeuratObject
+#' @param seu_obj SeuratObject
 #' @param features Selected marker genes
 #' @return A dataframe with cells labeled by marker genes
 #' @export
 mk_marker_ct <- function(
-  obj, 
+  seu_obj, 
   features
   ){
-  dat <- Seurat::FetchData(obj, vars = features)
+  dat <- Seurat::FetchData(seu_obj, vars = features)
   ori_names <- rownames(dat)
   zero_ct <- dat[rowSums(dat)==0,]
   non_zero <- dat[rowSums(dat)!=0,]

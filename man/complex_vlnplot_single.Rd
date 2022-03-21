@@ -5,7 +5,7 @@
 \title{Violin plot for a single gene across groups}
 \usage{
 complex_vlnplot_single(
-  seu,
+  seu_obj,
   feature,
   cell.types = NULL,
   groups,
@@ -16,7 +16,7 @@ complex_vlnplot_single(
 )
 }
 \arguments{
-\item{seu}{A complete Seurat object}
+\item{seu_obj}{A complete Seurat object}
 
 \item{feature}{Gene name. Only one gene is allowed.}
 

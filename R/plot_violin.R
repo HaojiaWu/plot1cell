@@ -7,7 +7,7 @@
 #' different groups or cell types. It is designed for visualizing a complicated scenario: 
 #' Gene expression on multiple cell types and multiple conditions.
 #'
-#' @param seu A complete Seurat object
+#' @param seu_obj A complete Seurat object
 #' @param feature Gene name. Only one gene is allowed.
 #' @param cell.types Cell types of interest. By default, all cell types are included.
 #' @param groups Groups selected for plotting. Support multiple groups.
@@ -19,7 +19,7 @@
 #' @export
 
 complex_vlnplot_single <- function(
-  seu,
+  seu_obj,
   feature,
   cell.types=NULL,
   groups,
@@ -29,10 +29,11 @@ complex_vlnplot_single <- function(
   split.by=NULL
 ){
   if(is.null(cell.types)){
-    cell.types = levels(seu)
+    cell.types = levels(seu_obj)
   } 
-  gene_count<-extract_gene_count(seu=seu, features = feature, cell.types = cell.types, meta.groups = c(groups, split.by))
-  set.seed(seed = 42)
+  gene_count<-extract_gene_count(seu_obj=seu_obj, features = feature, cell.types = cell.types, meta.groups = c(groups, split.by))
+  max_exp<-max(gene_count[,feature])
+    set.seed(seed = 42)
   noise <- rnorm(n = length(x = gene_count[,feature])) / 100000
   gene_count[, feature]<-gene_count[,feature]+noise
   if (length(groups)==1) {
@@ -47,7 +48,8 @@ complex_vlnplot_single <- function(
               legend.title = element_blank(),
               legend.position = 'none',
               strip.text = element_text( size = font.size),
-              plot.title = element_text(size=(font.size+2), hjust = 0.5))
+              plot.title = element_text(size=(font.size+2), hjust = 0.5))+
+        coord_cartesian(ylim = c(0, max_exp), clip = 'off') 
       if(add.dot){
         p = p + geom_quasirandom(size=pt.size, alpha=0.2)
       }
@@ -83,7 +85,7 @@ complex_vlnplot_single <- function(
                   axis.ticks.x = element_blank(), 
                   axis.title.y = element_text(size = font.size, angle = 0), 
                   axis.text.y = element_text(size = (font.size-2)),
-                  plot.margin = unit(c(-0.5, 0, -0.5, 0), "cm") ) 
+                  plot.margin = unit(c(-0.5, 0, -0.5, 0), "cm") )+coord_cartesian(ylim = c(0, max_exp), clip = 'off') 
           if(add.dot){
             p = p + geom_quasirandom(size=pt.size, alpha=0.2)
           }
@@ -105,7 +107,7 @@ complex_vlnplot_single <- function(
                 strip.text = element_text( size = font.size),
                 axis.text.x = element_text(size=(font.size-2), angle = 45, hjust = 1, vjust = 1),
                 axis.title.y = element_text(size = font.size),
-                legend.position = "none")
+                legend.position = "none") +coord_cartesian(ylim = c(0, max_exp), clip = 'off') 
         if(add.dot){
           p = p + geom_quasirandom(size=pt.size, alpha=0.2)
         }
@@ -140,7 +142,7 @@ complex_vlnplot_single <- function(
               strip.text = element_text( size = font.size),
               legend.title = element_blank(),
               legend.position = 'none',
-              plot.title = element_text(size=(font.size+2), hjust = 0.5))+
+              plot.title = element_text(size=(font.size+2), hjust = 0.5))+coord_cartesian(ylim = c(0, max_exp), clip = 'off')+
         facet_wrap(~variable, scales = 'free_x')
       if(add.dot){
         p = p + geom_quasirandom(size=pt.size, alpha=0.2)
@@ -163,7 +165,7 @@ complex_vlnplot_single <- function(
                   axis.ticks.x = element_blank(), 
                   axis.title.y = element_text(size = font.size, angle = 0), 
                   axis.text.y = element_text(size = (font.size-2)),
-                  plot.margin = unit(c(-0.5, 0, -0.5, 0), "cm") ) 
+                  plot.margin = unit(c(-0.5, 0, -0.5, 0), "cm") ) +coord_cartesian(ylim = c(0, max_exp), clip = 'off')
           if(add.dot){
             p = p + geom_quasirandom(size=pt.size, alpha=0.2)
           }

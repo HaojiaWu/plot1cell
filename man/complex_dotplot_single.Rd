@@ -34,8 +34,5 @@ A ggplot object
 }
 \description{
 This function can be used for plotting a single gene expression across
-different groups in a study with complex group design. It uses the data
-output from the DotPlot function in the Seurat package and uses ggplot2
-to re-create a dotplot for better visualization. In the output graph, y axis
-is the cluster name and x axis is the group ID.
+different groups in a study with complex group design.
 }

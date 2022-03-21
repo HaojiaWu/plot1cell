@@ -11,10 +11,10 @@
 #' @param group The group selected for analysis
 #' @return Output two txt files for CellPhoneDB
 #' @export
-creat_cellphonedb_file <- function(Seurat_obj, group){
+creat_cellphonedb_file <- function(seu_obj, group){
   counts <- as.data.frame(
     as.matrix(
-      Seurat_obj@assays$RNA@data)
+      seu_obj@assays$RNA@data)
   )
   mouse_genes<-rownames(counts)
   human = useMart("ensembl", dataset = "hsapiens_gene_ensembl") 
@@ -29,7 +29,7 @@ creat_cellphonedb_file <- function(Seurat_obj, group){
   counts<-counts[genesV2$MGI.symbol,]
   rownames(counts)<-genesV2$Gene.stable.ID
   metadata <- data.frame(Cell = colnames(counts),
-                         cell_type = as.character(Seurat_obj@active.ident)
+                         cell_type = as.character(seu_obj@active.ident)
   )
   metadata$Cell<-gsub('\\-','\\.',metadata$Cell)
   counts<-na.omit(counts)
@@ -334,7 +334,7 @@ data_processing <- function(
 #' counts and the associated meta data for ploting. It returns a dataframe
 #' with the requested information from the Seurat object.
 #'
-#' @param seu A finished Seurat Object with cell type annotation in the active.ident slot
+#' @param seu_obj A finished Seurat Object with cell type annotation in the active.ident slot
 #' @param features Gene names to extract expression data
 #' @param cell.types The cell types to be inspected. By default, it will incorporate all cell types.
 #' @param data.type The data slot to be accessed. By default, the "data" slot will be used.
@@ -343,21 +343,21 @@ data_processing <- function(
 #' @export
 #' 
 extract_gene_count <- function(
-  seu, 
+  seu_obj, 
   features, 
   cell.types=NULL, 
   data.type="data", 
   meta.groups=NULL
  ){
   if(is.null(cell.types)){
-    cell.types=levels(seu)
+    cell.types=levels(seu_obj)
   }
-  seu@meta.data$celltype<-as.character(seu@active.ident)
+  seu_obj@meta.data$celltype<-as.character(seu_obj@active.ident)
   if(is.null(meta.groups)){
-    meta.groups=colnames(seu@meta.data)
+    meta.groups=colnames(seu_obj@meta.data)
   }
   if(!is.null(cell.types)){
-    new_seu<-subset(seu, idents=cell.types)
+    new_seu<-subset(seu_obj, idents=cell.types)
   }
   feature_count<-Seurat::FetchData(new_seu, slot = data.type, vars = c(features,meta.groups,"celltype"))
   umap_data<-data.frame(new_seu[["umap"]]@cell.embeddings)
@@ -414,4 +414,49 @@ change_strip_background <- function(
     k <- k+1
   }
   g
+}
+
+#' A function to generate an example dataset for demo
+#' @export
+Install.example<-function(){
+  getGEOSuppFiles(GEO = "GSE139107")
+  setwd("GSE139107/")
+  all_files<-list.files(pattern = "dge")
+  all_ct<-list()
+  for(i in 1:length(all_files)){
+    ct_data<-read.delim(all_files[i])
+    ct_data<-Matrix(as.matrix(ct_data), sparse = T)
+    all_ct[[i]]<-ct_data
+    print(all_files[i])
+  }
+  all.count<-RowMergeSparseMatrices(all_ct[[1]], all_ct[-1])
+  meta.data<-read.delim('GSE139107_MouseIRI.metadata.txt.gz')
+  all.count<-all.count[,rownames(meta.data)]
+  iri <- CreateSeuratObject(counts = all.count, min.cells = 0, min.features = 0, meta.data = meta.data)
+  iri.list <- SplitObject(iri, split.by = "orig.ident")
+  iri.list <- lapply(X = iri.list, FUN = function(x) {
+    x <- NormalizeData(x, verbose = FALSE)
+    x <- FindVariableFeatures(x, verbose = FALSE)
+  })
+  features <- SelectIntegrationFeatures(object.list = iri.list)
+  iri.list <- lapply(X = iri.list, FUN = function(x) {
+    x <- ScaleData(x, features = features, verbose = FALSE)
+    x <- RunPCA(x, features = features, verbose = FALSE)
+  })
+  anchors <- FindIntegrationAnchors(object.list = iri.list, reference = c(1, 2), reduction = "rpca",
+                                    dims = 1:50)
+  iri.integrated <- IntegrateData(anchorset = anchors, dims = 1:50)
+  iri.integrated <- ScaleData(iri.integrated, verbose = FALSE)
+  iri.integrated <- RunPCA(iri.integrated, verbose = FALSE)
+  iri.integrated <- RunUMAP(iri.integrated, dims = 1:25, min.dist = 0.2)
+  iri.integrated<-SetIdent(iri.integrated, value = 'celltype')
+  levels(iri.integrated)<-c("PTS1"  ,  "PTS2"  ,  "PTS3", "NewPT1", "NewPT2",
+                            "DTL-ATL", "MTAL", "CTAL1" ,  "CTAL2","MD","DCT" ,
+                            "DCT-CNT","CNT","PC1","PC2","ICA","ICB","Uro","Pod","PEC",
+                            "EC1","EC2","Fib","Per","Mø","Tcell")
+  levels(iri.integrated@meta.data$Group)<-c("Control","4hours","12hours","2days","14days","6weeks" )
+  DefaultAssay(iri.integrated)<-"RNA"
+  setwd("../")
+  unlink("GSE139107/",recursive=TRUE)
+  iri.integrated
 }

@@ -4,12 +4,12 @@
 \alias{creat_cellphonedb_file}
 \title{Generate the files required by CellPhoneDB}
 \usage{
-creat_cellphonedb_file(Seurat_obj, group)
+creat_cellphonedb_file(seu_obj, group)
 }
 \arguments{
-\item{group}{The group selected for analysis}
-
 \item{seu_obj}{A complete Seurat object}
+
+\item{group}{The group selected for analysis}
 }
 \value{
 Output two txt files for CellPhoneDB

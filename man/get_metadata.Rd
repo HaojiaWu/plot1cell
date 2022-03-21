@@ -4,10 +4,10 @@
 \alias{get_metadata}
 \title{Get metadata from a Seurat object}
 \usage{
-get_metadata(obj, reductions = "umap", coord_scale = 0.8, color)
+get_metadata(seu_obj, reductions = "umap", coord_scale = 0.8, color)
 }
 \arguments{
-\item{obj}{SeuratObject}
+\item{seu_obj}{SeuratObject}
 
 \item{reductions}{reductions methods, e.g."umap" or "tsne".}
 

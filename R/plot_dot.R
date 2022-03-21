@@ -4,10 +4,7 @@
 #' Plot single gene across groups
 #'
 #' This function can be used for plotting a single gene expression across 
-#' different groups in a study with complex group design. It uses the data
-#' output from the DotPlot function in the Seurat package and uses ggplot2 
-#' to re-create a dotplot for better visualization. In the output graph, y axis
-#' is the cluster name and x axis is the group ID.
+#' different groups in a study with complex group design.
 #'
 #' @param seu_obj A complete Seurat object
 #' @param feature Gene name. Only one gene is allowed.
@@ -27,11 +24,11 @@ complex_dotplot_single <- function(
   do.scale=T,
   scale.by='radius'
 ){
+  groupby_level<-levels(seu_obj@meta.data[,groupby])
   seu_obj@meta.data[,groupby]<-gsub("_","-",seu_obj@meta.data[,groupby])
-  if (is.null(levels(seu_obj@meta.data[,groupby]))){
+  if (is.null(groupby_level)){
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
   }
-  groupby_level<-levels(seu_obj@meta.data[,groupby])
   levels(seu_obj)<-rev(levels(seu_obj))
   celltypes<-levels(seu_obj)
   celltypes<-gsub("_", "-", celltypes)

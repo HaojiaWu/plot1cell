@@ -4,10 +4,10 @@
 \alias{mk_marker_ct}
 \title{Make count matrix for the selected markers}
 \usage{
-mk_marker_ct(obj, features)
+mk_marker_ct(seu_obj, features)
 }
 \arguments{
-\item{obj}{SeuratObject}
+\item{seu_obj}{SeuratObject}
 
 \item{features}{Selected marker genes}
 }

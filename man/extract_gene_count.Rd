@@ -5,7 +5,7 @@
 \title{A function to extract gene counts for ploting}
 \usage{
 extract_gene_count(
-  seu,
+  seu_obj,
   features,
   cell.types = NULL,
   data.type = "data",
@@ -13,7 +13,7 @@ extract_gene_count(
 )
 }
 \arguments{
-\item{seu}{A finished Seurat Object with cell type annotation in the active.ident slot}
+\item{seu_obj}{A finished Seurat Object with cell type annotation in the active.ident slot}
 
 \item{features}{Gene names to extract expression data}
 

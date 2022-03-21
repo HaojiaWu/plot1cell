@@ -56,9 +56,28 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/dotplot_multiple.png) <br />
 
-### 3. Vlnplot to show gene expression across groups
+### 3. Violin plot to show gene expression across groups
+#### One gene/one group violin plot:
+```
+png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 300)
+complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/vlnplot_single.png) <br />
 
+#### One genes/multiple groups violin plot:
+```
+png(filename =  'vlnplot_multiple.png', width = 8, height = 6,units = 'in', res = 300)
+complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/vlnplot_multiple.png) <br />
 
+Note that the Replicates group here is for demo purpose. This is not the mouse ID as reported in our original paper.
+
+#### Multiple genes/multiple groups.
+The violin plot will look too messy in this scenario so it is not included in plot1cell. It would highly recommend to use the complex_dot_plot instead. <br />
+For scRNA-seq studies with higher complexity, the complex_vlnplot_single function also allows split the group by another group in the meta data with the argument "split.by". Since the demo dataset doesn't have this complexity, examples are not included here. Users can refer to our recent DKD dataset with multiple treatments/two timepoints (the PCT violin graph in <a href="https://humphreyslab.com/SingleCell/">K.I.T.</a>)
 
 
 

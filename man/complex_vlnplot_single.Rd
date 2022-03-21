@@ -7,7 +7,7 @@
 complex_vlnplot_single(
   seu_obj,
   feature,
-  cell.types = NULL,
+  celltypes = NULL,
   groups,
   add.dot = T,
   font.size = 14,
@@ -20,7 +20,7 @@ complex_vlnplot_single(
 
 \item{feature}{Gene name. Only one gene is allowed.}
 
-\item{cell.types}{Cell types of interest. By default, all cell types are included.}
+\item{celltypes}{Cell types of interest. By default, all cell types are included.}
 
 \item{groups}{Groups selected for plotting. Support multiple groups.}
 

@@ -9,7 +9,7 @@
 #'
 #' @param seu_obj A complete Seurat object
 #' @param feature Gene name. Only one gene is allowed.
-#' @param cell.types Cell types of interest. By default, all cell types are included.
+#' @param celltypes Cell types of interest. By default, all cell types are included.
 #' @param groups Groups selected for plotting. Support multiple groups.
 #' @param add.dot Whether or not to add points on the violins.
 #' @param font.size Font size for the labels.
@@ -21,23 +21,32 @@
 complex_vlnplot_single <- function(
   seu_obj,
   feature,
-  cell.types=NULL,
+  celltypes=NULL,
   groups,
   add.dot = T,
   font.size=14,
   pt.size=0.1,
   split.by=NULL
 ){
-  if(is.null(cell.types)){
-    cell.types = levels(seu_obj)
+  if(is.null(celltypes)){
+    celltypes = levels(seu_obj)
   } 
-  gene_count<-extract_gene_count(seu_obj=seu_obj, features = feature, cell.types = cell.types, meta.groups = c(groups, split.by))
+  gene_count<-extract_gene_count(seu_obj=seu_obj, features = feature, cell.types = celltypes, meta.groups = c(groups, split.by))
+  allgroups<-c(groups,split.by )
+  for(i in 1:length(allgroups)){
+    if (is.null(levels(seu_obj@meta.data[,allgroups[i]]))){
+      seu_obj@meta.data[,allgroups[i]] <-factor(seu_obj@meta.data[,allgroups[i]], levels = names(table(seu_obj@meta.data[,allgroups[i]])))
+    }
+    group_level<-levels(seu_obj@meta.data[,allgroups[i]])
+    gene_count[,allgroups[i]]<-factor(gene_count[,allgroups[i]],
+                                      levels = group_level)
+  }
   max_exp<-max(gene_count[,feature])
     set.seed(seed = 42)
   noise <- rnorm(n = length(x = gene_count[,feature])) / 100000
   gene_count[, feature]<-gene_count[,feature]+noise
   if (length(groups)==1) {
-    if(length(cell.types)==1){
+    if(length(celltypes)==1){
       p<-ggplot(gene_count, aes_string(x=groups, y=feature, fill=groups))+
         geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
         xlab("") + ylab("") + ggtitle(feature) +
@@ -59,7 +68,7 @@ complex_vlnplot_single <- function(
         strip_t <- which(grepl('strip-t', g$layout$name))
         strip_r <- which(grepl('strip-r', g$layout$name))
         strip_both<-c( strip_r,strip_t)
-        ncol <- length(cell.types) + length(names(table(gene_count[,split.by])))
+        ncol <- length(celltypes) + length(names(table(gene_count[,split.by])))
         fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
@@ -74,11 +83,11 @@ complex_vlnplot_single <- function(
     } else {
       if(is.null(split.by)){
         plot_list<-list()
-        for(i in 1:length(cell.types)){
-          cell_count <- gene_count[gene_count$celltype==cell.types[i],]
+        for(i in 1:length(celltypes)){
+          cell_count <- gene_count[gene_count$celltype==celltypes[i],]
           p<-ggplot(cell_count, aes_string(x=groups, y=feature, fill=groups))+
             geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
-            xlab("") + ylab(cell.types[i]) +
+            xlab("") + ylab(celltypes[i]) +
             theme(panel.background = element_rect(fill = "white",colour = "black"),
                   legend.position = "none", 
                   axis.text.x = element_blank(), 
@@ -115,7 +124,7 @@ complex_vlnplot_single <- function(
         strip_t <- which(grepl('strip-t', g$layout$name))
         strip_r <- which(grepl('strip-r', g$layout$name))
         strip_both<-c(strip_t, strip_r)
-        ncol <- length(cell.types) + length(names(table(gene_count[,split.by])))
+        ncol <- length(celltypes) + length(names(table(gene_count[,split.by])))
         fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
@@ -130,7 +139,7 @@ complex_vlnplot_single <- function(
     if(!is.null(split.by)){
       stop("This function does not support spliting multiple groups. Plots will look too messy! Please select one group only in the 'groups' parameter if you want to use 'split.by'.")
     }
-    if(length(cell.types)==1){
+    if(length(celltypes)==1){
       gene_count<-melt(gene_count[,c(feature, groups)], measure.vars  = groups)
       p<-ggplot(gene_count, aes_string(x="value", y=feature, fill="value"))+
         geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
@@ -154,11 +163,11 @@ complex_vlnplot_single <- function(
       for(i in 1:length(groups)){
         group=groups[i]
         cell_count<-gene_count[,c(feature, group, "celltype")]
-        for(j in 1:length(cell.types)){
-          cell_count2 <- cell_count[cell_count$celltype==cell.types[j],]
+        for(j in 1:length(celltypes)){
+          cell_count2 <- cell_count[cell_count$celltype==celltypes[j],]
           p<-ggplot(cell_count2, aes_string(x=group, y=feature, fill=group))+
             geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
-            xlab("") + ylab(cell.types[j]) +
+            xlab("") + ylab(celltypes[j]) +
             theme(panel.background = element_rect(fill = "white",colour = "black"),
                   legend.position = "none", 
                   axis.text.x = element_blank(), 

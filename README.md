@@ -43,7 +43,7 @@ dev.off()
 ### 2. Dotplot to show gene expression across groups
 Here is an example to use plot1cell to show one gene expression across different cell types breakdown by group.
 ```
-png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 300)
+png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groupby = "Group")
 dev.off()
 ```

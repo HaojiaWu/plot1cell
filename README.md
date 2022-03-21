@@ -59,7 +59,7 @@ dev.off()
 ### 3. Violin plot to show gene expression across groups
 #### One gene/one group violin plot:
 ```
-png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 300)
+png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
 dev.off()
 ```

@@ -190,7 +190,7 @@ plot_circlize <- function(
   }
   circos.clear()
   par(bg = bg.color)
-  circos.par(cell.padding=c(0,0,0,0), track.margin=c(0.01,0),"track.height" = 0.01, gap.degree =c(rep(2, (length(celltypes)-1)),12))
+  circos.par(cell.padding=c(0,0,0,0), track.margin=c(0.01,0),"track.height" = 0.01, gap.degree =c(rep(2, (length(celltypes)-1)),12),points.overflow.warning=FALSE)
   circos.initialize(sectors =  data_plot$Cluster, x = data_plot$x_polar2)
   circos.track(data_plot$Cluster, data_plot$x_polar2, y=data_plot$dim2, bg.border=NA,panel.fun = function(x, y) {
     circos.text(CELL_META$xcenter,

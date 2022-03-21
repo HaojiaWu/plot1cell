@@ -4,12 +4,20 @@
 \alias{complex_dotplot_multiple}
 \title{Plot multiple genes across groups}
 \usage{
-complex_dotplot_multiple(seu_obj, features, groupby, strip.color = NULL)
+complex_dotplot_multiple(
+  seu_obj,
+  features,
+  celltypes = NULL,
+  groupby,
+  strip.color = NULL
+)
 }
 \arguments{
 \item{seu_obj}{A complete Seurat object}
 
 \item{features}{A vector of gene names.}
+
+\item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
 
 \item{groupby}{Group ID Must be one of the column names in the meta.data slot of the Seurat object.}
 

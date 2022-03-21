@@ -30,6 +30,7 @@ set.seed(1234)
 cluster_colors<-rand_color(length(levels(iri.integrated)))
 group_colors<-rand_color(length(table(iri.integrated$Group)))
 rep_colors<-group_colors<-rand_color(length(table(iri.integrated$orig.ident)))
+
 ###plot and save figures
 png(filename =  'circlize_plot.png', width = 6, height = 6,units = 'in', res = 300)
 plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200)
@@ -40,8 +41,22 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/circlize_plot.png) <br />
 
 ### 2. Dotplot to show gene expression across groups
+Here is an example to use plot1cell to show one gene expression across different cell types breakdown by group.
+```
+png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 300)
+complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groupby = "Group")
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/dotplot_single.png) <br />
+plot1cell allows visualization of multiple genes in dotplot format too. Here is an example.
+```
+png(filename =  'dotplot_multiple.png', width = 10, height = 4,units = 'in', res = 300)
+complex_dotplot_multiple(seu_obj = iri.integrated, features = c("Slc34a1","Slc7a13","Havcr1","Krt20","Vcam1"),groupby = "Group", celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/dotplot_multiple.png) <br />
 
-
+### 3. Vlnplot to show gene expression across groups
 
 
 

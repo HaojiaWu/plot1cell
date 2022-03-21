@@ -8,6 +8,7 @@
 #'
 #' @param seu_obj A complete Seurat object
 #' @param feature Gene name. Only one gene is allowed.
+#' @param celltypes Cell types to be included in the dot plot. Default: all cell types.
 #' @param groupby The group to show on x axis. One of the column names in meta.data.
 #' @param splitby The group to separate the gene expression. One of the column names in meta.data.
 #' @param scale.by Methods to scale the dot size. "radius" or "size"
@@ -18,6 +19,7 @@
 complex_dotplot_single <- function(
   seu_obj, 
   feature, 
+  celltypes=NULL,
   groupby,
   splitby=NULL,
   strip.color=NULL,
@@ -30,7 +32,10 @@ complex_dotplot_single <- function(
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
   }
   levels(seu_obj)<-rev(levels(seu_obj))
-  celltypes<-levels(seu_obj)
+  if(is.null(celltypes)){
+    celltypes<-levels(seu_obj)
+  }
+  seu_obj<-subset(seu_obj,idents=celltypes)
   celltypes<-gsub("_", "-", celltypes)
   seu_obj@meta.data$celltype<-as.character(seu_obj@active.ident)
   seu_obj@meta.data$celltype<-gsub("_", "-", seu_obj@meta.data$celltype)
@@ -117,6 +122,7 @@ complex_dotplot_single <- function(
 #'
 #' @param seu_obj A complete Seurat object
 #' @param features A vector of gene names.
+#' @param celltypes Cell types to be included in the dot plot. Default: all cell types.
 #' @param groupby Group ID Must be one of the column names in the meta.data slot of the Seurat object.
 #' @param strip.color Colors for the strip background
 #' @return A ggplot object
@@ -124,17 +130,17 @@ complex_dotplot_single <- function(
 complex_dotplot_multiple <- function(
   seu_obj, 
   features, 
+  celltypes=NULL,
   groupby, 
   strip.color = NULL
   ){
  pb <- progress_bar$new(
    format = "  Ploting [:bar] :percent eta: :eta",
    clear = FALSE, total = length(features), width = 100)
- features=rev(features)
  plot_list<-list()
  for(i in 1:length(features)){
   pp<-invisible(
-    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groupby = groupby)
+    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groupby = groupby, celltypes = celltypes)
   )
   pp<-pp$data
   pp$gene <- features[i]
@@ -143,6 +149,7 @@ complex_dotplot_multiple <- function(
   Sys.sleep(1 / length(features))
   }
   all_data<-do.call('rbind', plot_list)
+  all_data$gene<-factor(all_data$gene, levels = rev(features)) 
   all_data$celltype <- factor(all_data$celltype, levels = levels(seu_obj))
   p <- invisible(
     ggplot(all_data, aes(x = groupby, y = gene)) +  

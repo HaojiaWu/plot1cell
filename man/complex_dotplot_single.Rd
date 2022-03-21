@@ -7,6 +7,7 @@
 complex_dotplot_single(
   seu_obj,
   feature,
+  celltypes = NULL,
   groupby,
   splitby = NULL,
   strip.color = NULL,
@@ -18,6 +19,8 @@ complex_dotplot_single(
 \item{seu_obj}{A complete Seurat object}
 
 \item{feature}{Gene name. Only one gene is allowed.}
+
+\item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
 
 \item{groupby}{The group to show on x axis. One of the column names in meta.data.}
 

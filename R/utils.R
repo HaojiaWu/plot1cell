@@ -460,3 +460,39 @@ Install.example<-function(){
   unlink("GSE139107/",recursive=TRUE)
   iri.integrated
 }
+
+#' A function to order genes upregulated from the first to the last column
+#' @param df A data frames with genes in row and samples in column
+#' @export
+order_gene_up<-function(df){
+  min.col <- function(m, ...) max.col(-m, ...)
+  df$celltype<-colnames(df)[min.col(df,ties.method="first")]
+  df$celltype<-factor(df$celltype, levels = names(df))
+  df<-df[order(df$celltype),]
+  gene.names<-list()
+  for (i in names(df)){
+    aa<-df[df$celltype==i,]
+    aa<-aa[order(aa[,i],decreasing = T),]
+    gene.names[[i]]<-rownames(aa)
+  }
+  gene.names<-as.character(unlist(gene.names))
+  return(gene.names)
+}
+
+#' A function to order genes downregulated from the first to the last column
+#' @param df A data frames with genes in row and samples in column
+#' @export
+order_gene_down<-function(df){
+  df$celltype<-colnames(df)[max.col(df,ties.method="first")]
+  df$celltype<-factor(df$celltype, levels = names(df))
+  df<-df[order(df$celltype),]
+  gene.names<-list()
+  for (i in names(df)){
+    aa<-df[df$celltype==i,]
+    aa<-aa[order(aa[,i],decreasing = F),]
+    gene.names[[i]]<-rownames(aa)
+  }
+  gene.names<-as.character(unlist(gene.names))
+  return(gene.names)
+}
+

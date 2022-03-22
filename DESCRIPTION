@@ -37,7 +37,8 @@ Imports:
     EnsDb.Hsapiens.v86,
     cowplot,
     rlang,
-    GEOquery
+    GEOquery,
+    simplifyEnrichment
 Depends:
     Seurat,
     plotly,
@@ -67,7 +68,8 @@ Depends:
     EnsDb.Hsapiens.v86,
     cowplot,
     rlang,
-    GEOquery
+    GEOquery,
+    simplifyEnrichment
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true

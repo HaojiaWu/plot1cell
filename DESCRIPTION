@@ -38,7 +38,8 @@ Imports:
     cowplot,
     rlang,
     GEOquery,
-    simplifyEnrichment
+    simplifyEnrichment,
+    wordcloud
 Depends:
     Seurat,
     plotly,
@@ -69,7 +70,8 @@ Depends:
     cowplot,
     rlang,
     GEOquery,
-    simplifyEnrichment
+    simplifyEnrichment,
+    wordcloud
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true

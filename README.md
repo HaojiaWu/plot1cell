@@ -30,7 +30,7 @@ circ_data <- prepare_circlize_data(iri.integrated, scale = 0.8 )
 set.seed(1234)
 cluster_colors<-rand_color(length(levels(iri.integrated)))
 group_colors<-rand_color(length(table(iri.integrated$Group)))
-rep_colors<-group_colors<-rand_color(length(table(iri.integrated$orig.ident)))
+rep_colors<-rand_color(length(table(iri.integrated$orig.ident)))
 
 ###plot and save figures
 png(filename =  'circlize_plot.png', width = 6, height = 6,units = 'in', res = 300)

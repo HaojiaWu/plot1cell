@@ -16,7 +16,7 @@ iri.integrated <- Install.example()
 
 # Please note that this Seurat object is just for demo purpose and 
 # is not exactly the same as we published on PNAS.
-# It take about 2 hours to run in a linux server with 500GB RAM and 32 CPU cores.
+# It takes about 2 hours to run in a linux server with 500GB RAM and 32 CPU cores.
 # You can skip this step and use your own Seurat object instead
 ```
 

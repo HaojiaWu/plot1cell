@@ -35,8 +35,8 @@ rep_colors<-rand_color(length(names(table(iri.integrated$orig.ident))))
 ###plot and save figures
 png(filename =  'circlize_plot.png', width = 6, height = 6,units = 'in', res = 300)
 plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200, repel = T)
-add_track(circ_data, group = "Group", colors = group_colors) ## can change it to one of the columns in the meta data of your seurat object
-add_track(circ_data, group = "orig.ident",colors = rep_colors) ## can change it to one of the columns in the meta data of your seurat object
+add_track(circ_data, group = "Group", colors = group_colors, track_num=2) ## can change it to one of the columns in the meta data of your seurat object
+add_track(circ_data, group = "orig.ident",colors = rep_colors, track_num = 3) ## can change it to one of the columns in the meta data of your seurat object
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/circlize_plot.png) <br />

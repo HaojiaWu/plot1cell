@@ -4,12 +4,14 @@
 \alias{add_track}
 \title{Add tracks to the circlize plot}
 \usage{
-add_track(data_plot, group, colors = NULL)
+add_track(data_plot, group, track_num, colors = NULL)
 }
 \arguments{
 \item{data_plot}{Data for circlize plot}
 
 \item{group}{The group to be shown on the new track}
+
+\item{track_num}{Which number this track is? Value is integer and starts with 2 for the 2nd track, track_num=3 for the 3rd track, etc...}
 
 \item{colors}{Color palette to color the group}
 }

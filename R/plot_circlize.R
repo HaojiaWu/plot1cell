@@ -224,9 +224,18 @@ plot_circlize <- function(
 #' @param data_plot Data for circlize plot 
 #' @param group The group to be shown on the new track
 #' @param colors Color palette to color the group
+#' @param track_num Which number this track is? Value is integer and starts with 2 for the 2nd track, track_num=3 for the 3rd track, etc...
 #' @return A new circlize track adding to the current circlize plot
 #' @export
-add_track <- function(data_plot, group, colors = NULL){
+add_track <- function(
+  data_plot, 
+  group, 
+  track_num, 
+  colors = NULL
+  ){
+  if(track_num<2){
+    stop("The first track is the cluster track. Please change the track_num to a value greater than 1")
+  }
   circos.track(data_plot$Cluster, data_plot$x_polar2, y=data_plot$dim2, bg.border=NA)
   celltypes<-names(table(data_plot$Cluster))
   group_names<-names(table(data_plot[,group]))
@@ -244,4 +253,5 @@ add_track <- function(data_plot, group, colors = NULL){
     dat_seg2<-scale_factor*dat_seg2
     circos.segments(x0 = dat_seg, y0 = 0, x1 = dat_seg2, y1 = 0, col = col_group, sector.index = celltypes[i], lwd=3)
   }
+  text(x = (1-0.03*(track_num-1)), y=0.1, labels = group, cex = 0.4, col = 'black',srt=-90)
 }

@@ -6,7 +6,7 @@ This package allows users to visualize the single cell data on the R objects or 
 plot1cell R package can be easily installed from Github using devtools. Please make sure you have installed Seurat 4.0, circlize and ComplexHeatmap packages.
 ```
 devtools::install_github("TheHumphreysLab/plot1cell")
-## or devtools::install_github("HaojiaWu/plot1cell")
+## or the development version, devtools::install_github("HaojiaWu/plot1cell")
 ```
 
 ## Usage
@@ -66,7 +66,7 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single.png) <br />
 
-#### One genes/multiple groups violin plot:
+#### One gene/multiple groups violin plot:
 ```
 png(filename =  'vlnplot_multiple.png', width = 8, height = 6,units = 'in', res = 300)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
@@ -88,8 +88,17 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/geneplot_umap.png) <br />
 
+### 5. ComplexHeatmap to show unique genes across groups
+plot1cell can directly identify the condition specific genes in a selected cell type and plot those genes using ComplexHeatmap. An example is shown below:
+```
+iri.integrated$Group2<-mapvalues(iri.integrated$Group, from = c("Control", "4hours",  "12hours", "2days",   "14days" , "6weeks" ),
+to = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
+iri.integrated$Group2<-factor(iri.integrated$Group2, levels = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
+png(filename =  'heatmap_group.png', width = 4, height = 8,units = 'in', res = 100)
+complex_heatmap_group(seu_obj = iri.integrated, celltype = "NewPT2", group = "Group2",gene_highlight = c("Slc22a28","Vcam1","Krt20","Havcr1"))
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/heatmap_group.png) <br />
 
-
-
-
-
+### 6. Other ploting functions
+There are other functions for plotting/data processing in plot1cell. Many more functions will be added in the future package development. For questions, please raise an issue in this github page or contact <a href="https://humphreyslab.com">TheHumphreysLab</a>. 

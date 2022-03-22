@@ -16,7 +16,7 @@ iri.integrated <- Install.example()
 
 # Please note that this Seurat object is just for demo purpose and 
 # is not exactly the same as we published on PNAS.
-# It take about 2 hours to run in a linux server with 500GB RAM and 32 CPU cores.
+# It takes about 2 hours to run in a linux server with 500GB RAM and 32 CPU cores.
 # You can skip this step and use your own Seurat object instead
 ```
 
@@ -29,12 +29,12 @@ colnames(iri.integrated@meta.data)
 circ_data <- prepare_circlize_data(iri.integrated, scale = 0.8 )
 set.seed(1234)
 cluster_colors<-rand_color(length(levels(iri.integrated)))
-group_colors<-rand_color(length(table(iri.integrated$Group)))
-rep_colors<-group_colors<-rand_color(length(table(iri.integrated$orig.ident)))
+group_colors<-rand_color(length(names(table(iri.integrated$Group))))
+rep_colors<-rand_color(length(names(table(iri.integrated$orig.ident))))
 
 ###plot and save figures
 png(filename =  'circlize_plot.png', width = 6, height = 6,units = 'in', res = 300)
-plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200)
+plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200, repel = T)
 add_track(circ_data, group = "Group", colors = group_colors) ## can change it to one of the columns in the meta data of your seurat object
 add_track(circ_data, group = "orig.ident",colors = rep_colors) ## can change it to one of the columns in the meta data of your seurat object
 dev.off()

@@ -12,7 +12,8 @@ plot_circlize(
   kde2d.n = 1000,
   contour.nlevels = 100,
   bg.color = "#F9F2E4",
-  col.use = NULL
+  col.use = NULL,
+  repel = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ plot_circlize(
 \item{contour.nlevels}{Total number of levels in contour}
 
 \item{bg.color}{Canvas background color}
+
+\item{col.use}{Colors used to label the cell type}
+
+\item{repel}{Whether or not to repel the cell type names on umap}
 }
 \value{
 Return a circlize plot

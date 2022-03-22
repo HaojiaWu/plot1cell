@@ -161,6 +161,8 @@ prepare_circlize_data <- function(
 #' @param pt.size Point size of the graph
 #' @param kde2d.n Number of grid points in each direction. A kde2d parameter
 #' @param contour.nlevels Total number of levels in contour
+#' @param col.use Colors used to label the cell type
+#' @param repel Whether or not to repel the cell type names on umap
 #' @return Return a circlize plot
 #' @export
 plot_circlize <- function(
@@ -171,7 +173,8 @@ plot_circlize <- function(
   kde2d.n = 1000,
   contour.nlevels = 100,
   bg.color='#F9F2E4',
-  col.use=NULL
+  col.use=NULL,
+  repel=FALSE
   ) {
   data_plot %>%
     dplyr::group_by(Cluster) %>%
@@ -207,8 +210,12 @@ plot_circlize <- function(
   points(data_plot$x,data_plot$y, pch = 19, col = alpha(data_plot$Colors,0.2), cex = pt.size);
   contour(z, drawlabels=F, nlevels= 100, levels = contour.levels,col = '#ae9c76', add=TRUE)
   if(do.label){
-  text(centers$x,centers$y, labels=centers$Cluster, cex = 0.8, col = 'black')
-  }
+    if(repel){
+      textplot(x=centers$x, y=centers$y, words =  centers$Cluster,cex = 0.8, new = F,show.lines=F)
+    } else {
+      text(centers$x,centers$y, labels=centers$Cluster, cex = 0.8, col = 'black')
+    }
+  } 
 }
 
 #' Add tracks to the circlize plot

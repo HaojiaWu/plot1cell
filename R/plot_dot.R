@@ -26,8 +26,8 @@ complex_dotplot_single <- function(
   do.scale=T,
   scale.by='radius'
 ){
-  groupby_level<-levels(seu_obj@meta.data[,groupby])
   seu_obj@meta.data[,groupby]<-gsub("_","-",seu_obj@meta.data[,groupby])
+  groupby_level<-levels(seu_obj@meta.data[,groupby])
   if (is.null(groupby_level)){
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
   }

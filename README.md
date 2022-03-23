@@ -103,4 +103,8 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/heatmap_group.png) <br />
 
 ### 6. Other ploting functions
-There are other functions for plotting/data processing in plot1cell. Many more functions will be added in the future package development. For questions, please raise an issue in this github page or contact <a href="https://humphreyslab.com">TheHumphreysLab</a>. 
+There are other functions for plotting/data processing in plot1cell. 
+```
+help(package = plot1cell)
+```
+Many more functions will be added in the future package development. For questions, please raise an issue in this github page or contact <a href="https://humphreyslab.com">TheHumphreysLab</a>. 

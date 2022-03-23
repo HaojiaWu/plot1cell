@@ -93,7 +93,7 @@ dev.off()
 ### 5. ComplexHeatmap to show unique genes across groups
 plot1cell can directly identify the condition specific genes in a selected cell type and plot those genes using ComplexHeatmap. An example is shown below:
 ```
-iri.integrated$Group2<-mapvalues(iri.integrated$Group, from = c("Control", "4hours",  "12hours", "2days",   "14days" , "6weeks" ),
+iri.integrated$Group2<-plyr::mapvalues(iri.integrated$Group, from = c("Control", "4hours",  "12hours", "2days",   "14days" , "6weeks" ),
 to = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
 iri.integrated$Group2<-factor(iri.integrated$Group2, levels = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
 png(filename =  'heatmap_group.png', width = 4, height = 8,units = 'in', res = 100)

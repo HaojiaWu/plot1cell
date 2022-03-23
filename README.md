@@ -13,6 +13,7 @@ devtools::install_github("TheHumphreysLab/plot1cell")
 ## Usage
 We provide some example codes to help generate figures from user's provided Seurat object. The Seurat object input to plot1cell should be a final object with completed clustering and cell type annotation. If a seurat object is not available, we suggest to use the demo data from Satija's lab (https://satijalab.org/seurat/articles/integration_introduction.html). To demonstrate the plotting functions in plot1cell, we re-created a Seurat object from our recent paper <a href="https://www.pnas.org/doi/10.1073/pnas.2005477117">Kirita et al, PNAS 2020</a> by integrating the count matrices we uploaded to GEO (GSE139107).
 ```
+library(plot1cell)
 iri.integrated <- Install.example() 
 
 # Please note that this Seurat object is just for demo purpose and 

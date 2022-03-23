@@ -31,6 +31,7 @@ complex_dotplot_single <- function(
   if (is.null(groupby_level)){
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
   }
+  groupby_level<-levels(seu_obj@meta.data[,groupby])
   levels(seu_obj)<-rev(levels(seu_obj))
   if(is.null(celltypes)){
     celltypes<-levels(seu_obj)

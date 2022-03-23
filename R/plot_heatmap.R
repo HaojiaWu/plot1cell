@@ -28,6 +28,11 @@ complex_heatmap_group<-function(
 cell1<-subset(seu_obj, idents=celltype)
 cell1<-SetIdent(cell1, value = group)
 group_levels<-levels(seu_obj@meta.data[,group])
+seu_obj@meta.data[,group]<-gsub("_","-",seu_obj@meta.data[,group])
+if (is.null(group_levels)){
+  seu_obj@meta.data[,group] <-factor(seu_obj@meta.data[,group], levels = names(table(seu_obj@meta.data[,group])))
+}
+group_levels<-levels(seu_obj@meta.data[,group])
 cell1_avg<-AverageExpression(cell1, verbose = F, return.seurat = F, assays = "RNA")
 cell1_avg<-cell1_avg$RNA
 cell1_avg<-data.frame(cell1_avg)

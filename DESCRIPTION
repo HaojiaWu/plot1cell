@@ -39,7 +39,8 @@ Imports:
     rlang,
     GEOquery,
     simplifyEnrichment,
-    wordcloud
+    wordcloud,
+    ComplexHeatmap
 Depends:
     Seurat,
     plotly,
@@ -71,7 +72,8 @@ Depends:
     rlang,
     GEOquery,
     simplifyEnrichment,
-    wordcloud
+    wordcloud,
+    ComplexHeatmap
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true

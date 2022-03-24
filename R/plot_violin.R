@@ -28,6 +28,9 @@ complex_vlnplot_single <- function(
   pt.size=0.1,
   split.by=NULL
 ){
+  if(length(feature)>1){
+    stop("Only one gene is allowed in this method. Please use complex_vlnplot_multiple if you want to plot multiple genes.")
+  }
   if(is.null(celltypes)){
     celltypes = levels(seu_obj)
   } 
@@ -140,7 +143,17 @@ complex_vlnplot_single <- function(
       stop("This function does not support spliting multiple groups. Plots will look too messy! Please select one group only in the 'groups' parameter if you want to use 'split.by'.")
     }
     if(length(celltypes)==1){
-      gene_count<-melt(gene_count[,c(feature, groups)], measure.vars  = groups)
+      all_levels<-list()
+      for(i in 1:length(groups)){
+        if (is.null(levels(seu_obj@meta.data[,groups[i]]))){
+          seu_obj@meta.data[,groups[i]] <-factor(seu_obj@meta.data[,groups[i]], levels = names(table(seu_obj@meta.data[,groups[i]])))
+        }
+        group_level<-levels(seu_obj@meta.data[,groups[i]])
+        all_levels[[i]]<-group_level
+      }
+      all_levels<-as.character(unlist(all_levels))
+      gene_count<-reshape2::melt(gene_count[,c(feature, groups)], measure.vars  = groups)
+      gene_count$value<-factor(gene_count$value, levels = all_levels)
       p<-ggplot(gene_count, aes_string(x="value", y=feature, fill="value"))+
         geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
         xlab("") + ylab("") + ggtitle(feature) +
@@ -191,3 +204,5 @@ complex_vlnplot_single <- function(
     }
   }
 }
+
+

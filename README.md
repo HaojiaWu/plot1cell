@@ -105,12 +105,21 @@ iri.integrated$Group2<-plyr::mapvalues(iri.integrated$Group, from = c("Control",
 to = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
 iri.integrated$Group2<-factor(iri.integrated$Group2, levels = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
 png(filename =  'heatmap_group.png', width = 4, height = 8,units = 'in', res = 100)
-complex_heatmap_group(seu_obj = iri.integrated, celltype = "NewPT2", group = "Group2",gene_highlight = c("Slc22a28","Vcam1","Krt20","Havcr1"))
+complex_heatmap_unique(seu_obj = iri.integrated, celltype = "NewPT2", group = "Group2",gene_highlight = c("Slc22a28","Vcam1","Krt20","Havcr1"))
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/heatmap_group.png) <br />
 
-### 6. Other ploting functions
+### 6. Upset plot to show the unique and shared DEGs across groups.
+
+```
+png(filename =  'upset_plot.png', width = 8, height = 4,units = 'in', res = 300)
+complex_upset_plot(iri.integrated, celltype = "NewPT2", group = "Group", min_size = 10, logfc=0.5)
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/upset_plot.png) <br />
+
+### 7. Other ploting functions
 There are other functions for plotting/data processing in plot1cell. 
 ```
 help(package = plot1cell)

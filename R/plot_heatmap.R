@@ -16,7 +16,7 @@
 #' @return A ComplexHeatmap object or/and a gene list
 #' @export
 
-complex_heatmap_group<-function(
+complex_heatmap_unique<-function(
   seu_obj,
   celltype,
   group,
@@ -28,7 +28,6 @@ complex_heatmap_group<-function(
 cell1<-subset(seu_obj, idents=celltype)
 cell1<-SetIdent(cell1, value = group)
 group_levels<-levels(seu_obj@meta.data[,group])
-seu_obj@meta.data[,group]<-gsub("_","-",seu_obj@meta.data[,group])
 if (is.null(group_levels)){
   seu_obj@meta.data[,group] <-factor(seu_obj@meta.data[,group], levels = names(table(seu_obj@meta.data[,group])))
 }

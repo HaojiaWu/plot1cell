@@ -218,6 +218,7 @@ complex_vlnplot_single <- function(
 #' @param add.dot Whether or not to add points on the violins.
 #' @param font.size Font size for the labels.
 #' @param pt.size Point size for the data points on the violin
+#' @param alpha Point transparency. value from 0 to 1.
 #' @return A ggplot object
 #' @export
 
@@ -228,7 +229,8 @@ complex_vlnplot_multiple <- function(
   group,
   add.dot = T,
   font.size=14,
-  pt.size=0.1
+  pt.size=0.1,
+  alpha=0.01
 ){
   if(length(features)<2){
     stop("At least two genes are required. For single gene violin plot, please use complex_vlnplot_single instead.")
@@ -272,7 +274,7 @@ complex_vlnplot_multiple <- function(
           strip.text.y.left = element_text(angle = 0)) +
     xlab("") + ylab("")
   if(add.dot){
-    p = p + geom_quasirandom(size=pt.size, alpha=0.2)
+    p = p + geom_quasirandom(size=pt.size, alpha=alpha)
   }
   p
 }

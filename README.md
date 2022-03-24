@@ -60,7 +60,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_multiple.png) <br />
 
 ### 3. Violin plot to show gene expression across groups
-#### One gene/one group violin plot:
+#### One gene/one group factor violin plot:
 ```
 png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
@@ -68,7 +68,7 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single.png) <br />
 
-#### One gene/multiple groups violin plot:
+#### One gene/multiple group factors violin plot:
 ```
 png(filename =  'vlnplot_multiple.png', width = 8, height = 6,units = 'in', res = 300)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
@@ -78,7 +78,15 @@ dev.off()
 
 Note that the Replicates group here is for demo purpose. This is not the mouse ID as reported in our original paper.
 
-#### Multiple genes/multiple groups.
+#### Multiple genes/one group factor violin plot:
+```
+png(filename =  'vlnplot_multiple_genes.png', width = 8, height = 6,units = 'in', res = 300)
+complex_vlnplot_multiple(iri.integrated, features = c("Havcr1",  "Slc34a1", "Vcam1",   "Krt20"  , "Slc7a13", "Slc5a12"), celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), group = "Group", add.dot=T, pt.size=0.001, alpha=0.001)
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple_genes.png) <br />
+
+#### Multiple genes/multiple group factors.
 The violin plot will look too messy in this scenario so it is not included in plot1cell. It is highly recommended to use the complex_dot_plot instead. <br />
 For scRNA-seq studies with higher complexity, the complex_vlnplot_single function also allows split the group by another group in the meta data with the argument "split.by". Since the demo dataset doesn't have this complexity, examples are not included here. Users can refer to our recent DKD dataset with multiple treatments/two timepoints (the PCT violin graph in <a href="https://humphreyslab.com/SingleCell/">K.I.T.</a>)
 

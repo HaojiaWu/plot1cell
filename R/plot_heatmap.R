@@ -83,7 +83,7 @@ label1<-gene_highlight
 if(is.null(label1)){
   label1=rownames(data_plot)
 }
-ComplexHeatmap::ht_opt$message = FALSE
+ht_opt$message = FALSE
 ht<- Heatmap(data_plot,name = "mat", cluster_rows = F, cluster_columns = F, 
              column_title = NULL,col = col_fun, row_title = NULL,
              cluster_row_slices = FALSE, cluster_column_slices = FALSE,

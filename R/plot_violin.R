@@ -205,4 +205,75 @@ complex_vlnplot_single <- function(
   }
 }
 
+#' Violin plot for multiple genes across groups
+#'
+#' This function generates violin plot(s) to compare the expression of multiple genes across 
+#' different groups or cell types. It is designed for visualizing a complicated scenario: 
+#' Gene expression of multiple genes on multiple cell types across groups.
+#'
+#' @param seu_obj A complete Seurat object
+#' @param features Gene name. Only one gene is allowed.
+#' @param celltypes Cell types of interest. By default, all cell types are included.
+#' @param group Only one groupID is allowed.
+#' @param add.dot Whether or not to add points on the violins.
+#' @param font.size Font size for the labels.
+#' @param pt.size Point size for the data points on the violin
+#' @return A ggplot object
+#' @export
+
+complex_vlnplot_multiple <- function(
+  seu_obj,
+  features,
+  celltypes=NULL,
+  group,
+  add.dot = T,
+  font.size=14,
+  pt.size=0.1
+){
+  if(length(features)<2){
+    stop("At least two genes are required. For single gene violin plot, please use complex_vlnplot_single instead.")
+  }
+  if(length(group)>1){
+    stop("Use violin plot to show multiple genes in multiple group categories across multiple cell types will look too messy. Please use one group ID only.")
+  }
+  if(is.null(celltypes)){
+    celltypes = levels(seu_obj)
+  } 
+  gene_count<-extract_gene_count(seu_obj=seu_obj, features = features, cell.types = celltypes, meta.groups = group)
+  if (is.null(levels(seu_obj@meta.data[,group]))){
+    seu_obj@meta.data[,group] <-factor(seu_obj@meta.data[,group], levels = names(table(seu_obj@meta.data[,group])))
+  }
+  group_level<-levels(seu_obj@meta.data[,group])
+  gene_count[,group]<-factor(gene_count[,group],levels = group_level)
+  for(i in 1:length(features)){
+    max_exp<-max(gene_count[,features[i]])
+    set.seed(seed = 42)
+    noise <- rnorm(n = length(x = gene_count[,features[i]])) / 100000
+    gene_count[, features[i]]<-gene_count[,features[i]]+noise
+  }
+  gene_count$Cell<-rownames(gene_count)
+  gene_count <- reshape2::melt(gene_count, id.vars = c("Cell","celltype",group), measure.vars = features,
+                               variable.name = "Genes", value.name = "Expr")
+  gene_count[, group]<-factor(gene_count[, group], levels = group_level)
+  gene_count[, "celltype"]<-factor(gene_count[, "celltype"], levels = celltypes)
+  ##The plot is modified from https://github.com/ycl6/StackedVlnPlot
+  p<-ggplot(gene_count, aes_string(group, "Expr", fill = group)) +
+    geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink") +
+    scale_y_continuous(expand = c(0, 0), position="right", labels = function(x)
+      c(rep(x = "", times = length(x)-2), x[length(x) - 1], "")) +
+    facet_grid(rows = vars(Genes), cols = vars(celltype),scales = "free", switch = "y") +
+    theme_cowplot(font_size = 12) +
+    theme(legend.position = "none", panel.spacing = unit(0, "lines"),
+          plot.title = element_text(hjust = 0.5),
+          panel.background = element_rect(fill = NA, color = "black"),
+          axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+          strip.background = element_blank(),
+          strip.text = element_text(face = "bold"),
+          strip.text.y.left = element_text(angle = 0)) +
+    xlab("") + ylab("")
+  if(add.dot){
+    p = p + geom_quasirandom(size=pt.size, alpha=0.2)
+  }
+  p
+}
 

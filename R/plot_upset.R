@@ -53,13 +53,22 @@ complex_upset_plot<-function(
   combined_data2[is.na(combined_data2)] <- 0
   combined_data1$Direction<-"Upregulated"
   combined_data2$Direction<-"Downregulated"
+  
+  gene_count1<-data.frame(table(all_markers1$gene))
+  colnames(gene_count1)[1]<-"gene"
+  combined_data1<-merge(combined_data1, gene_count1, by='gene')
+  combined_data1$Freq<-as.integer(combined_data1$Freq)
+  combined_data1$type<-ifelse(combined_data1$Freq==1, "Unique","Shared")
+  
+  gene_count2<-data.frame(table(all_markers2$gene))
+  colnames(gene_count2)[1]<-"gene"
+  combined_data2<-merge(combined_data2, gene_count2, by='gene')
+  combined_data2$Freq<-as.integer(combined_data2$Freq)
+  combined_data2$type<-ifelse(combined_data2$Freq==1, "Unique","Shared")
+  
   combined_data<-rbind(combined_data1, combined_data2)
-  all_genes<-combined_data$gene
-  gene_count<-data.frame(table(all_markers$gene))
-  colnames(gene_count)[1]<-"gene"
-  combined_data<-merge(combined_data, gene_count, by='gene')
-  combined_data$type<-ifelse(combined_data$Freq==1, "Unique","Shared")
-  main_bar_color<-hue_pal()(length(group_levels))
+
+
   metadata<-data.frame(set=group_levels)
   metadata$color_col<-metadata$set
   upset(combined_data, group_levels, 

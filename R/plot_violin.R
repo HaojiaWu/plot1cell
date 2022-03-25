@@ -46,7 +46,7 @@ complex_vlnplot_single <- function(
   }
   max_exp<-max(gene_count[,feature])
     set.seed(seed = 42)
-  noise <- rnorm(n = length(x = gene_count[,feature])) / 100000
+  noise <- rnorm(n = length(x = gene_count[,feature])) / 100000 ## This follows the same data processing for VlnPlot in Seurat
   gene_count[, feature]<-gene_count[,feature]+noise
   if (length(groups)==1) {
     if(length(celltypes)==1){
@@ -250,7 +250,7 @@ complex_vlnplot_multiple <- function(
   for(i in 1:length(features)){
     max_exp<-max(gene_count[,features[i]])
     set.seed(seed = 42)
-    noise <- rnorm(n = length(x = gene_count[,features[i]])) / 100000
+    noise <- rnorm(n = length(x = gene_count[,features[i]])) / 100000 ## This follows the same data processing for VlnPlot in Seurat
     gene_count[, features[i]]<-gene_count[,features[i]]+noise
   }
   gene_count$Cell<-rownames(gene_count)

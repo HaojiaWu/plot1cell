@@ -30,8 +30,8 @@ cell1<-SetIdent(cell1, value = group)
 group_levels<-levels(seu_obj@meta.data[,group])
 if (is.null(group_levels)){
   seu_obj@meta.data[,group] <-factor(seu_obj@meta.data[,group], levels = names(table(seu_obj@meta.data[,group])))
-}
-group_levels<-levels(seu_obj@meta.data[,group])
+  group_levels<-levels(seu_obj@meta.data[,group])
+  }
 levels(cell1)<-group_levels
 cell1_avg<-AverageExpression(cell1, verbose = F, return.seurat = F, assays = "RNA")
 cell1_avg<-cell1_avg$RNA

@@ -29,8 +29,8 @@ complex_dotplot_single <- function(
   groupby_level<-levels(seu_obj@meta.data[,groupby])
   if (is.null(groupby_level)){
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
+    groupby_level<-levels(seu_obj@meta.data[,groupby])
   } 
-  groupby_level<-levels(seu_obj@meta.data[,groupby])
   if (sum(grepl("_", groupby_level))>0){
     seu_obj@meta.data[,groupby]<-gsub("_","-",seu_obj@meta.data[,groupby])
     groupby_level<-gsub("_","-",groupby_level)

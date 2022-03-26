@@ -55,7 +55,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single.png) <br />
 If the group factor can be classified by another factor, complex_dotplot_single allows splitting the group factor by another group factor too. Here is an example for demo.
 ```
-iri.integrated@meta.data$Phase<-plyr::mapvalues(iri.integrated@meta.data$Group, from = levels(iri.integrated@meta.data$Group), to = c(rep("Injury",4), rep("Recovery",2)))
+iri.integrated@meta.data$Phase<-plyr::mapvalues(iri.integrated@meta.data$Group, from = levels(iri.integrated@meta.data$Group), to = c("Healthy",rep("Injury",3), rep("Recovery",2)))
 iri.integrated@meta.data$Phase<-as.character(iri.integrated@meta.data$Phase)
 png(filename =  'dotplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
 complex_dotplot_single(iri.integrated, feature = "Havcr1",groupby = "Group",splitby = "Phase")

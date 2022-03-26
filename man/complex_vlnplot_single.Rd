@@ -12,7 +12,7 @@ complex_vlnplot_single(
   add.dot = T,
   font.size = 14,
   pt.size = 0.1,
-  split.by = NULL
+  splitby = NULL
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ complex_vlnplot_single(
 
 \item{pt.size}{Point size for the data points on the violin}
 
-\item{split.by}{Group to split the gene expression. Only works when length(groups)==1.}
+\item{splitby}{Group to split the gene expression. Only works when length(groups)==1.}
 }
 \value{
 A ggplot object

@@ -36,7 +36,6 @@ complex_dotplot_single <- function(
     groupby_level<-gsub("_","-",groupby_level)
     seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = groupby_level)
   }
-  levels(seu_obj)<-rev(levels(seu_obj))
   if(is.null(celltypes)){
     celltypes<-levels(seu_obj)
   }
@@ -47,24 +46,23 @@ complex_dotplot_single <- function(
   seu_obj<-SetIdent(seu_obj, value='celltype')
   levels(seu_obj)<-celltypes
   if(!is.null(splitby)){
-    seu_obj@meta.data[,splitby]<-gsub("_","-",seu_obj@meta.data[,splitby])
     if (is.null(levels(seu_obj@meta.data[,splitby]))){
       seu_obj@meta.data[,splitby] <-factor(seu_obj@meta.data[,splitby], levels = names(table(seu_obj@meta.data[,splitby])))
     }
     splitby_level<-levels(seu_obj@meta.data[,splitby])
     count_df<-extract_gene_count(seu_obj, features = feature, meta.groups = c(groupby,splitby))
-    count_df$new_group<-paste(count_df[,groupby], count_df[,"celltype"], count_df[,splitby],sep = "_")
+    count_df$new_group<-paste(count_df[,groupby], count_df[,"celltype"], count_df[,splitby],sep = "___")
     exp_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){mean(expm1(x))})
     pct_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){length(x[x > 0]) / length(x)})
     colnames(exp_df)[2]<-"avg.exp"
     colnames(pct_df)[2]<-"pct.exp"
     data_plot<-merge(exp_df, pct_df, by='new_group')
-    data_plot$groupby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "_"),FUN = function(x){x[[1]]}))
-    data_plot$celltype <- as.character(lapply(X=strsplit(data_plot$new_group, split = "_"),FUN = function(x){x[[2]]}))
-    data_plot$splitby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "_"),FUN = function(x){x[[3]]}))
+    data_plot$groupby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[1]]}))
+    data_plot$celltype <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[2]]}))
+    data_plot$splitby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[3]]}))
     data_plot$groupby <- factor(data_plot$groupby, levels = groupby_level)
     data_plot$splitby <- factor(data_plot$splitby, levels = splitby_level)
-    data_plot$celltype <- factor(data_plot$celltype, levels = celltypes)
+    data_plot$celltype <- factor(data_plot$celltype, levels = rev(celltypes))
   } else {
   count_df<-extract_gene_count(seu_obj, features = feature, meta.groups = groupby)
   count_df$new_group<-paste(count_df[,groupby], count_df[,"celltype"],sep = "_")

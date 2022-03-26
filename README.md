@@ -38,7 +38,7 @@ rep_colors<-rand_color(length(names(table(iri.integrated$orig.ident))))
 
 ###plot and save figures
 png(filename =  'circlize_plot.png', width = 6, height = 6,units = 'in', res = 300)
-plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200, repel = T)
+plot_circlize(circ_data,do.label = T, pt.size = 0.01, col.use = cluster_colors ,bg.color = 'white', kde2d.n = 200, repel = T, label.cex = 0.6)
 add_track(circ_data, group = "Group", colors = group_colors, track_num = 2) ## can change it to one of the columns in the meta data of your seurat object
 add_track(circ_data, group = "orig.ident",colors = rep_colors, track_num = 3) ## can change it to one of the columns in the meta data of your seurat object
 dev.off()
@@ -53,7 +53,17 @@ complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groupby = "G
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single.png) <br />
-plot1cell allows visualization of multiple genes in dotplot format too. Here is an example.
+If the group factor can be classified by another factor, complex_dotplot_single allows splitting the group factor by another group factor too. Here is an example for demo.
+```
+iri.integrated@meta.data$Phase<-plyr::mapvalues(iri.integrated@meta.data$Group, from = levels(iri.integrated@meta.data$Group), to = c(rep("Injury",4), rep("Recovery",2)))
+iri.integrated@meta.data$Phase<-as.character(iri.integrated@meta.data$Phase)
+png(filename =  'dotplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
+complex_dotplot_single(iri.integrated, feature = "Havcr1",groupby = "Group",splitby = "Phase")
+dev.off()
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single_split.png) <br />
+
+```
+plot1cell also allows visualization of multiple genes in dotplot format. Here is an example.
 ```
 png(filename =  'dotplot_multiple.png', width = 10, height = 4,units = 'in', res = 300)
 complex_dotplot_multiple(seu_obj = iri.integrated, features = c("Slc34a1","Slc7a13","Havcr1","Krt20","Vcam1"),groupby = "Group", celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
@@ -70,6 +80,13 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single.png) <br />
 
+Similar to complex_dotplot_single, the complex_vlnplot_single function also allows splitting the group factor by another factor with the argument "splitby".
+```
+png(filename =  'vlnplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
+complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), splitby = "Phase")
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single_split.png) <br />
 #### One gene/multiple group factors violin plot:
 ```
 png(filename =  'vlnplot_multiple.png', width = 8, height = 6,units = 'in', res = 300)
@@ -90,7 +107,6 @@ dev.off()
 
 #### Multiple genes/multiple group factors.
 The violin plot will look too messy in this scenario so it is not included in plot1cell. It is highly recommended to use the complex_dot_plot instead. <br />
-For scRNA-seq studies with higher complexity, the complex_vlnplot_single function also allows split the group by another group in the meta data with the argument "split.by". Since the demo dataset doesn't have this complexity, examples are not included here. Users can refer to our recent DKD dataset with multiple treatments/two timepoints (the PCT violin graph in <a href="https://humphreyslab.com/SingleCell/">K.I.T.</a>)
 
 ### 4. Umap geneplot across groups
 ```

@@ -14,7 +14,7 @@
 #' @param add.dot Whether or not to add points on the violins.
 #' @param font.size Font size for the labels.
 #' @param pt.size Point size for the data points on the violin
-#' @param split.by Group to split the gene expression. Only works when length(groups)==1.
+#' @param splitby Group to split the gene expression. Only works when length(groups)==1.
 #' @return A ggplot object
 #' @export
 
@@ -26,7 +26,7 @@ complex_vlnplot_single <- function(
   add.dot = T,
   font.size=14,
   pt.size=0.1,
-  split.by=NULL
+  splitby=NULL
 ){
   if(length(feature)>1){
     stop("Only one gene is allowed in this method. Please use complex_vlnplot_multiple if you want to plot multiple genes.")
@@ -34,8 +34,8 @@ complex_vlnplot_single <- function(
   if(is.null(celltypes)){
     celltypes = levels(seu_obj)
   } 
-  gene_count<-extract_gene_count(seu_obj=seu_obj, features = feature, cell.types = celltypes, meta.groups = c(groups, split.by))
-  allgroups<-c(groups,split.by )
+  gene_count<-extract_gene_count(seu_obj=seu_obj, features = feature, cell.types = celltypes, meta.groups = c(groups, splitby))
+  allgroups<-c(groups,splitby )
   for(i in 1:length(allgroups)){
     if (is.null(levels(seu_obj@meta.data[,allgroups[i]]))){
       seu_obj@meta.data[,allgroups[i]] <-factor(seu_obj@meta.data[,allgroups[i]], levels = names(table(seu_obj@meta.data[,allgroups[i]])))
@@ -65,13 +65,13 @@ complex_vlnplot_single <- function(
       if(add.dot){
         p = p + geom_quasirandom(size=pt.size, alpha=0.2)
       }
-      if(!is.null(split.by)){
-        p = p + facet_wrap(as.formula(paste("~", split.by)), scales = 'free_x')
+      if(!is.null(splitby)){
+        p = p + facet_wrap(as.formula(paste("~", splitby)), scales = 'free_x')
         g <- ggplot_gtable(ggplot_build(p))
         strip_t <- which(grepl('strip-t', g$layout$name))
         strip_r <- which(grepl('strip-r', g$layout$name))
         strip_both<-c( strip_r,strip_t)
-        ncol <- length(celltypes) + length(names(table(gene_count[,split.by])))
+        ncol <- length(celltypes) + length(names(table(gene_count[,splitby])))
         fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
@@ -84,7 +84,7 @@ complex_vlnplot_single <- function(
         p
       }
     } else {
-      if(is.null(split.by)){
+      if(is.null(splitby)){
         plot_list<-list()
         for(i in 1:length(celltypes)){
           cell_count <- gene_count[gene_count$celltype==celltypes[i],]
@@ -108,8 +108,8 @@ complex_vlnplot_single <- function(
         p<- patchwork::wrap_plots(plotlist = plot_list, ncol = 1)  + patchwork::plot_annotation(title = feature) & theme(plot.title = element_text(hjust = 0.5, size = (font.size +2)))
         p
       } else {
-        p<-ggplot(gene_count, aes_string(x = "group", y = feature, fill = "group")) +
-          facet_grid(as.formula(paste("celltype","~","group2")), scales = "free_x") +
+        p<-ggplot(gene_count, aes_string(x = groups, y = feature, fill = groups)) +
+          facet_grid(as.formula(paste("celltype","~", splitby)), scales = "free_x") +
           geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
           xlab("") +
           ylab(paste(feature,"expression")) +
@@ -127,7 +127,7 @@ complex_vlnplot_single <- function(
         strip_t <- which(grepl('strip-t', g$layout$name))
         strip_r <- which(grepl('strip-r', g$layout$name))
         strip_both<-c(strip_t, strip_r)
-        ncol <- length(celltypes) + length(names(table(gene_count[,split.by])))
+        ncol <- length(celltypes) + length(names(table(gene_count[,splitby])))
         fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
         k <- 1
         for (i in strip_both) {
@@ -139,8 +139,8 @@ complex_vlnplot_single <- function(
       }
     }
   } else {
-    if(!is.null(split.by)){
-      stop("This function does not support spliting multiple groups. Plots will look too messy! Please select one group only in the 'groups' parameter if you want to use 'split.by'.")
+    if(!is.null(splitby)){
+      stop("This function does not support spliting multiple groups. Plots will look too messy! Please select one group only in the 'groups' parameter if you want to use 'splitby'.")
     }
     if(length(celltypes)==1){
       all_levels<-list()

@@ -60,9 +60,9 @@ iri.integrated@meta.data$Phase<-as.character(iri.integrated@meta.data$Phase)
 png(filename =  'dotplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
 complex_dotplot_single(iri.integrated, feature = "Havcr1",groupby = "Group",splitby = "Phase")
 dev.off()
+```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single_split.png) <br />
 
-```
 plot1cell also allows visualization of multiple genes in dotplot format. Here is an example.
 ```
 png(filename =  'dotplot_multiple.png', width = 10, height = 4,units = 'in', res = 300)
@@ -78,6 +78,7 @@ png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
 dev.off()
 ```
+
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single.png) <br />
 
 Similar to complex_dotplot_single, the complex_vlnplot_single function also allows splitting the group factor by another factor with the argument "splitby".

@@ -46,7 +46,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/circlize_plot.png) <br />
 
 ### 2. Dotplot to show gene expression across groups
-Here is an example to use plot1cell to show one gene expression across different cell types breakdown by group.
+Here is an example to use plot1cell to show one gene expression across different cell types across groups.
 ```
 png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groupby = "Group")

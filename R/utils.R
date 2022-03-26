@@ -385,28 +385,31 @@ firstup <- function(
 
 #' A function to change the strip background color in ggplot
 #' @param ggplt_obj A ggplot object
-#' @param n.color Number of colors.
+#' @param type Strip on the "top" side only or "both" sides
 #' @param strip.color A color vector
 #' @export
 #' 
 change_strip_background <- function(
   ggplt_obj, 
   type = "top",
-  n.color, 
   strip.color=NULL
   ){
   g <- ggplot_gtable(ggplot_build(ggplt_obj))
   if(type == "top"){
     strip_both <- which(grepl('strip-t', g$layout$name))
+    fills<-strip.color
+    if(is.null(fills)){
+    fills<- scales::hue_pal(l=90)(length(strip_both))
+    }
   } else {
     strip_t <- which(grepl('strip-t', g$layout$name))
     strip_r <- which(grepl('strip-r', g$layout$name))
     strip_both<-c(strip_t, strip_r)
+    fills<-strip.color
+    if(is.null(fills)){
+      fills<- c(scales::hue_pal(l=90)(length(strip_t)),scales::hue_pal(l=90)(length(strip_r)))
+    }
   }
-  fills <- strip.color
-  if(is.null(strip.color)){
-    fills<- scales::hue_pal()(n.color)
-  } 
   k <- 1
   for (i in strip_both) {
     j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))

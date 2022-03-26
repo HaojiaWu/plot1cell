@@ -108,7 +108,7 @@ complex_dotplot_single <- function(
   }
   if(!is.null(splitby)){
     p <- p +facet_wrap(~splitby, scales = 'free_x')
-    g <- change_strip_background(p, type = 'top', n.color = length(levels(seu_obj)), strip.color = strip.color)
+    g <- change_strip_background(p, type = 'top', strip.color = strip.color)
     print(grid.draw(g))
   } else {
     p
@@ -172,7 +172,7 @@ complex_dotplot_multiple <- function(
     ylab("")+xlab("")+ggtitle('')+
     facet_wrap(~celltype, ncol = length(levels(seu_obj)))
   )
-  g <- change_strip_background(p, type = 'top', n.color = length(levels(seu_obj)), strip.color = strip.color)
+  g <- change_strip_background(p, type = 'top',  strip.color = strip.color)
   print(grid.draw(g))
 }
 

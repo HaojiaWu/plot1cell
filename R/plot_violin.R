@@ -15,6 +15,7 @@
 #' @param font.size Font size for the labels.
 #' @param pt.size Point size for the data points on the violin
 #' @param splitby Group to split the gene expression. Only works when length(groups)==1.
+#' @param strip.color Colors for the strip background
 #' @return A ggplot object
 #' @export
 
@@ -26,7 +27,8 @@ complex_vlnplot_single <- function(
   add.dot = T,
   font.size=14,
   pt.size=0.1,
-  splitby=NULL
+  splitby=NULL,
+  strip.color=NULL
 ){
   if(length(feature)>1){
     stop("Only one gene is allowed in this method. Please use complex_vlnplot_multiple if you want to plot multiple genes.")
@@ -67,18 +69,7 @@ complex_vlnplot_single <- function(
       }
       if(!is.null(splitby)){
         p = p + facet_wrap(as.formula(paste("~", splitby)), scales = 'free_x')
-        g <- ggplot_gtable(ggplot_build(p))
-        strip_t <- which(grepl('strip-t', g$layout$name))
-        strip_r <- which(grepl('strip-r', g$layout$name))
-        strip_both<-c( strip_r,strip_t)
-        ncol <- length(celltypes) + length(names(table(gene_count[,splitby])))
-        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
-        k <- 1
-        for (i in strip_both) {
-          j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
-          g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
-          k <- k+1
-        }
+        g <- change_strip_background(p, type = 'top',  strip.color = strip.color)
         print(grid::grid.draw(g))
       } else {
         p
@@ -108,6 +99,7 @@ complex_vlnplot_single <- function(
         p<- patchwork::wrap_plots(plotlist = plot_list, ncol = 1)  + patchwork::plot_annotation(title = feature) & theme(plot.title = element_text(hjust = 0.5, size = (font.size +2)))
         p
       } else {
+        gene_count$celltype<-factor(gene_count$celltype, levels = celltypes)
         p<-ggplot(gene_count, aes_string(x = groups, y = feature, fill = groups)) +
           facet_grid(as.formula(paste("celltype","~", splitby)), scales = "free_x") +
           geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=0.5, color="pink")+
@@ -123,18 +115,7 @@ complex_vlnplot_single <- function(
         if(add.dot){
           p = p + geom_quasirandom(size=pt.size, alpha=0.2)
         }
-        g <- ggplot_gtable(ggplot_build(p))
-        strip_t <- which(grepl('strip-t', g$layout$name))
-        strip_r <- which(grepl('strip-r', g$layout$name))
-        strip_both<-c(strip_t, strip_r)
-        ncol <- length(celltypes) + length(names(table(gene_count[,splitby])))
-        fills <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Set3"))(ncol)
-        k <- 1
-        for (i in strip_both) {
-          j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
-          g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
-          k <- k+1
-        }
+        g <- change_strip_background(p, type = 'both',  strip.color = strip.color)
         print(grid::grid.draw(g))
       }
     }

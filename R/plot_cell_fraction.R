@@ -70,7 +70,7 @@ plot_cell_fraction<-function(
  
  if(show_replicate){
    p <- p +   geom_quasirandom(size=1,width = 0.2, color='midnightblue', alpha=0.8, groupOnX = F)+facet_wrap(~celltype, scales = 'free_y', ncol = length(celltypes))
-   g <- change_strip_background(p, type = 'top', n.color = length(celltypes), strip.color = strip.color)
+   g <- change_strip_background(p, type = 'top', strip.color = strip.color)
    print(grid.draw(g))
  } else {
    p

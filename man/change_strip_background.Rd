@@ -4,12 +4,12 @@
 \alias{change_strip_background}
 \title{A function to change the strip background color in ggplot}
 \usage{
-change_strip_background(ggplt_obj, type = "top", n.color, strip.color = NULL)
+change_strip_background(ggplt_obj, type = "top", strip.color = NULL)
 }
 \arguments{
 \item{ggplt_obj}{A ggplot object}
 
-\item{n.color}{Number of colors.}
+\item{type}{Strip on the "top" side only or "both" sides}
 
 \item{strip.color}{A color vector}
 }

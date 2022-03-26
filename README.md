@@ -119,6 +119,7 @@ png(filename =  'upset_plot.png', width = 8, height = 4,units = 'in', res = 300)
 complex_upset_plot(iri.integrated, celltype = "NewPT2", group = "Group", min_size = 10, logfc=0.5)
 dev.off()
 ```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/upset_plot.png) <br />
 
 ### 7. Cell proportion change across groups
 

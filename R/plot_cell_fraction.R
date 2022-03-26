@@ -3,7 +3,7 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' Plot cell fractions across groups
 #'
-#' This function to show the cell fraction changes across groups.
+#' This function is to show the cell fraction changes across groups.
 #'
 #' @param seu_obj A complete Seurat object
 #' @param celltypes Cell types to be included in the dot plot. Default: all cell types.

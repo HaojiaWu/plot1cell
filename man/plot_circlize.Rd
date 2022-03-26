@@ -13,6 +13,7 @@ plot_circlize(
   contour.nlevels = 100,
   bg.color = "#F9F2E4",
   col.use = NULL,
+  label.cex = 0.5,
   repel = FALSE
 )
 }
@@ -32,6 +33,8 @@ plot_circlize(
 \item{bg.color}{Canvas background color}
 
 \item{col.use}{Colors used to label the cell type}
+
+\item{label.cex}{Label font size}
 
 \item{repel}{Whether or not to repel the cell type names on umap}
 }

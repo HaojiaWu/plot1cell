@@ -158,6 +158,7 @@ prepare_circlize_data <- function(
 #' @param do.label Whether to label the clusters
 #' @param contour.levels Which contour line to be drawn on the plot. Value: 0-1
 #' @param bg.color Canvas background color
+#' @param label.cex Label font size
 #' @param pt.size Point size of the graph
 #' @param kde2d.n Number of grid points in each direction. A kde2d parameter
 #' @param contour.nlevels Total number of levels in contour
@@ -174,6 +175,7 @@ plot_circlize <- function(
   contour.nlevels = 100,
   bg.color='#F9F2E4',
   col.use=NULL,
+  label.cex = 0.5,
   repel=FALSE
   ) {
   data_plot %>%
@@ -211,9 +213,9 @@ plot_circlize <- function(
   contour(z, drawlabels=F, nlevels= 100, levels = contour.levels,col = '#ae9c76', add=TRUE)
   if(do.label){
     if(repel){
-      textplot(x=centers$x, y=centers$y, words =  centers$Cluster,cex = 0.8, new = F,show.lines=F)
+      textplot(x=centers$x, y=centers$y, words =  centers$Cluster,cex = label.cex, new = F,show.lines=F)
     } else {
-      text(centers$x,centers$y, labels=centers$Cluster, cex = 0.8, col = 'black')
+      text(centers$x,centers$y, labels=centers$Cluster, cex = label.cex, col = 'black')
     }
   } 
 }

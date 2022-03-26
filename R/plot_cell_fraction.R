@@ -6,9 +6,9 @@
 #' This function is to show the cell fraction changes across groups.
 #'
 #' @param seu_obj A complete Seurat object
-#' @param celltypes Cell types to be included in the dot plot. Default: all cell types.
+#' @param celltypes Cell types to be included in the plot. Default: all cell types.
 #' @param groupby The group to show on x axis. One of the column names in meta.data.
-#' @param show_replicate Whether or not to show the individual replicates from the graph. If TRUE, the replicate column names need to specify.
+#' @param show_replicate Whether or not to show the individual replicate on the graph. If TRUE, the replicate column name needs to specify in the argument rep_colname.
 #' @param rep_colname The column name for biological replicates in the meta data.
 #' @param strip.color Colors for the strip background
 #' @return A ggplot object

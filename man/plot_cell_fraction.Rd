@@ -16,11 +16,11 @@ plot_cell_fraction(
 \arguments{
 \item{seu_obj}{A complete Seurat object}
 
-\item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
+\item{celltypes}{Cell types to be included in the plot. Default: all cell types.}
 
 \item{groupby}{The group to show on x axis. One of the column names in meta.data.}
 
-\item{show_replicate}{Whether or not to show the individual replicates from the graph. If TRUE, the replicate column names need to specify.}
+\item{show_replicate}{Whether or not to show the individual replicate on the graph. If TRUE, the replicate column name needs to specify in the argument rep_colname.}
 
 \item{rep_colname}{The column name for biological replicates in the meta data.}
 
@@ -30,5 +30,5 @@ plot_cell_fraction(
 A ggplot object
 }
 \description{
-This function to show the cell fraction changes across groups.
+This function is to show the cell fraction changes across groups.
 }

@@ -111,8 +111,8 @@ The violin plot will look too messy in this scenario so it is not included in pl
 
 ### 4. Umap geneplot across groups
 ```
-png(filename =  'geneplot_umap.png', width = 4, height = 6,units = 'in', res = 100)
-complex_featureplot(iri.integrated, features = c("Havcr1","Slc34a1"), group = "Group", select = c("Control","12hours","6weeks"), order = T)
+png(filename =  'data/geneplot_umap.png', width = 8, height = 6,units = 'in', res = 100)
+complex_featureplot(iri.integrated, features = c("Havcr1",  "Slc34a1", "Vcam1",   "Krt20"  , "Slc7a13"), group = "Group", select = c("Control","12hours","6weeks"), order = F)
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/geneplot_umap.png) <br />

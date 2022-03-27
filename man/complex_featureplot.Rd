@@ -10,12 +10,14 @@ complex_featureplot(
   group,
   select = NULL,
   cols = NULL,
-  label.size = 14,
-  order = F
+  label.size = 12,
+  order = F,
+  strip.color = NULL,
+  pt.size = 0.01
 )
 }
 \arguments{
-\item{seu_obj}{A complete Seurat object}
+\item{seu_obj}{A complete Seurat object.}
 
 \item{features}{Gene names to be plotted.}
 
@@ -26,6 +28,10 @@ complex_featureplot(
 \item{cols}{Change the color legend.}
 
 \item{label.size}{Change the label size.}
+
+\item{strip.color}{Colors for the strip background.}
+
+\item{pt.size}{Point size for each cell.}
 }
 \value{
 A ggplot object

@@ -6,12 +6,14 @@
 #' This function can be used for plotting a single gene or multiple genes expression across 
 #' different groups in a seurat featureplot format. 
 #'
-#' @param seu_obj A complete Seurat object
+#' @param seu_obj A complete Seurat object.
 #' @param features Gene names to be plotted.
 #' @param group The group to show on y axis. One of the column names in meta.data.
 #' @param select Select the elements within the group to show.
 #' @param cols Change the color legend.
 #' @param label.size Change the label size.
+#' @param strip.color Colors for the strip background.
+#' @param pt.size Point size for each cell.
 #' @return A ggplot object
 #' @export
 
@@ -19,10 +21,12 @@ complex_featureplot<-function(
   seu_obj, 
   features, 
   group, 
-  select=NULL, 
-  cols=NULL, 
-  label.size=14, 
-  order=F
+  select = NULL, 
+  cols = NULL, 
+  label.size = 12, 
+  order = F, 
+  strip.color = NULL,
+  pt.size = 0.01
 ){
   gene_count<-extract_gene_count(seu_obj,features = features, meta.groups = group)
   if (is.null(levels(seu_obj@meta.data[,group]))){
@@ -51,12 +55,12 @@ complex_featureplot<-function(
   df_all$gene<-factor(df_all$gene, levels=features)
   if(order){
     df_all$isExpr<-ifelse(df_all$Exp>0, "Yes", "NO")
-    p<-ggplot(df_all, aes(UMAP1, UMAP2))+geom_point(color="gray80",size=0.01)+
-      geom_point(data = df_all[df_all$isExpr=="Yes",], aes(UMAP1, UMAP2, color=Exp), size=0.01)
+    p<-ggplot(df_all, aes(UMAP1, UMAP2))+geom_point(color="gray80",size=pt.size)+
+      geom_point(data = df_all[df_all$isExpr=="Yes",], aes(UMAP1, UMAP2, color=Exp), size=pt.size)
   } else {
-    p<-ggplot(df_all, aes(UMAP1, UMAP2, color=Exp))+geom_point(size=0.01)
+    p<-ggplot(df_all, aes(UMAP1, UMAP2, color=Exp))+geom_point(size=pt.size)
   }
-  p +
+  p<-p +
     scale_color_gradientn(colours  =  cols,
                           na.value = "white", limits=c(quantile(df_all$Exp, 0,na.rm= T), quantile(df_all$Exp, 1,na.rm= T)),
                           breaks = c(quantile(df_all$Exp, 0,na.rm= T), quantile(df_all$Exp, 1,na.rm= T)), labels = c("min","max"))+ 
@@ -65,9 +69,11 @@ complex_featureplot<-function(
           axis.line = element_blank(),
           axis.text = element_blank(),
           axis.title=element_blank(),
-          strip.background = element_blank(),
           strip.text = element_text(size=label.size),
-          legend.title = element_text(size = 12),
-          legend.position="left")+
+          legend.title = element_blank(),
+          legend.key.size = unit(0.5, 'cm'),
+          legend.position="bottom")+
     facet_grid(group ~ gene)
+  g <- change_strip_background(p, type = 'both',  strip.color = strip.color)
+  print(grid::grid.draw(g))
 }

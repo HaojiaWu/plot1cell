@@ -90,8 +90,8 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single_split.png) <br />
 #### One gene/multiple group factors violin plot:
 ```
-png(filename =  'vlnplot_multiple.png', width = 6, height = 6,units = 'in', res = 300)
-complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
+png(filename =  'vlnplot_multiple.png', width = 6, height = 6,units = 'in', res = 200)
+complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), font.size = 10)
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple.png) <br />

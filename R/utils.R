@@ -385,7 +385,7 @@ firstup <- function(
 
 #' A function to change the strip background color in ggplot
 #' @param ggplt_obj A ggplot object
-#' @param type Strip on the "top" side only or "both" sides
+#' @param type Strip on the "top" or "right" side only or "both" sides
 #' @param strip.color A color vector
 #' @export
 #' 
@@ -400,6 +400,12 @@ change_strip_background <- function(
     fills<-strip.color
     if(is.null(fills)){
     fills<- scales::hue_pal(l=90)(length(strip_both))
+    }
+  } else if(type=="right"){
+    strip_both <- which(grepl('strip-r', g$layout$name))
+    fills<-strip.color
+    if(is.null(fills)){
+      fills<- scales::hue_pal(l=90)(length(strip_both))
     }
   } else {
     strip_t <- which(grepl('strip-t', g$layout$name))

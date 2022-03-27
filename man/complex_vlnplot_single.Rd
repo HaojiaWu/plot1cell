@@ -13,11 +13,12 @@ complex_vlnplot_single(
   font.size = 14,
   pt.size = 0.1,
   splitby = NULL,
+  alpha = 0.5,
   strip.color = NULL
 )
 }
 \arguments{
-\item{seu_obj}{A complete Seurat object}
+\item{seu_obj}{A complete Seurat object.}
 
 \item{feature}{Gene name. Only one gene is allowed.}
 
@@ -29,11 +30,13 @@ complex_vlnplot_single(
 
 \item{font.size}{Font size for the labels.}
 
-\item{pt.size}{Point size for the data points on the violin}
+\item{pt.size}{Point size for the data points on the violin.}
 
 \item{splitby}{Group to split the gene expression. Only works when length(groups)==1.}
 
-\item{strip.color}{Colors for the strip background}
+\item{alpha}{Point transparency. value from 0 to 1.}
+
+\item{strip.color}{Colors for the strip background.}
 }
 \value{
 A ggplot object

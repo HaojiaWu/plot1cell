@@ -10,9 +10,10 @@ complex_vlnplot_multiple(
   celltypes = NULL,
   group,
   add.dot = T,
-  font.size = 14,
+  font.size = 12,
   pt.size = 0.1,
-  alpha = 0.01
+  alpha = 0.01,
+  strip.color = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ complex_vlnplot_multiple(
 \item{pt.size}{Point size for the data points on the violin}
 
 \item{alpha}{Point transparency. value from 0 to 1.}
+
+\item{strip.color}{Colors for the strip background}
 }
 \value{
 A ggplot object

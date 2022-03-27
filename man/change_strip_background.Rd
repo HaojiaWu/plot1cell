@@ -9,7 +9,7 @@ change_strip_background(ggplt_obj, type = "top", strip.color = NULL)
 \arguments{
 \item{ggplt_obj}{A ggplot object}
 
-\item{type}{Strip on the "top" side only or "both" sides}
+\item{type}{Strip on the "top" or "right" side only or "both" sides}
 
 \item{strip.color}{A color vector}
 }

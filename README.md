@@ -49,7 +49,7 @@ dev.off()
 Here is an example to use plot1cell to show one gene expression across different cell types across groups.
 ```
 png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 100)
-complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groupby = "Group")
+complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groups = "Group")
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single.png) <br />
@@ -58,15 +58,36 @@ If the group factor can be classified by another factor, complex_dotplot_single 
 iri.integrated@meta.data$Phase<-plyr::mapvalues(iri.integrated@meta.data$Group, from = levels(iri.integrated@meta.data$Group), to = c("Healthy",rep("Injury",3), rep("Recovery",2)))
 iri.integrated@meta.data$Phase<-as.character(iri.integrated@meta.data$Phase)
 png(filename =  'dotplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
-complex_dotplot_single(iri.integrated, feature = "Havcr1",groupby = "Group",splitby = "Phase")
+complex_dotplot_single(iri.integrated, feature = "Havcr1",groups = "Group",splitby = "Phase")
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single_split.png) <br />
 
-plot1cell also allows visualization of multiple genes in dotplot format. Here is an example.
+To visualize the same gene on multiple group factors, simply add more group factor IDs to the "groups" argument.
+```
+png(filename =  'dotplot_more_groups.png', width = 8, height = 6,units = 'in', res = 100)
+complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groups= c("Group","Replicates"))
+dev.off()
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_more_groups.png) <br />
+
+Each group factor can be further splitted by its own factor by setting the splitby argument. Note that in this case, the order of the group factors needs to match the order of splitby factors.
+```
+iri.integrated@meta.data$ReplicateID<-plyr::mapvalues(iri.integrated@meta.data$Replicates, from = names(table((iri.integrated@meta.data$Replicates))), to = c(rep("Rep1",3),rep("Rep2",3), rep("Rep3",1)))
+iri.integrated@meta.data$ReplicateID<-as.character(iri.integrated@meta.data$ReplicateID)
+
+png(filename =  'dotplot_more_groups_split.png', width = 9, height = 6,units = 'in', res = 200)
+complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groups= c("Group","Replicates"), splitby = c("Phase","ReplicateID"))
+dev.off()
+### In this example, "Phase" is a splitby factor for "Group" and "ReplicateID" is a splitby factor for "Replicates".
+```
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_more_groups_split.png) <br />
+Note that the Replicates group here is just for showcase purpose. This is not a meaning group ID in our snRNA-seq dataset.
+
+To visualize multiple genes in dotplot format, ```complex_dotplot_multiple``` should be used.
 ```
 png(filename =  'dotplot_multiple.png', width = 10, height = 4,units = 'in', res = 300)
-complex_dotplot_multiple(seu_obj = iri.integrated, features = c("Slc34a1","Slc7a13","Havcr1","Krt20","Vcam1"),groupby = "Group", celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
+complex_dotplot_multiple(seu_obj = iri.integrated, features = c("Slc34a1","Slc7a13","Havcr1","Krt20","Vcam1"),group = "Group", celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_multiple.png) <br />
@@ -96,24 +117,17 @@ dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple.png) <br />
 
-Each group factor can be further splitted by its own factor by setting the splitby argument. Note that in this case, the order of the group factors needs to match the order of splitby factors. For example:
+Similar to the functionality in complex_dotplot, each group factor can also be splitted by another factor in violin plot. For example:
 ```
-iri.integrated@meta.data$ReplicateID<-plyr::mapvalues(iri.integrated@meta.data$Replicates, from = names(table((iri.integrated@meta.data$Replicates))), to = c(rep("Rep1",3),rep("Rep2",3), rep("Rep3",1)))
-iri.integrated@meta.data$ReplicateID<-as.character(iri.integrated@meta.data$ReplicateID)
-
 png(filename =  'vlnplot_multiple_split.png', width = 7, height = 5,units = 'in', res = 200)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),
                         celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), 
                         font.size = 10, splitby = c("Phase","ReplicateID"), pt.size=0.05)
 dev.off()
-
-### In this example, "Phase" is a splitby factor for "Group" and "ReplicateID" is a splitby factor for "Replicates".
-
 ```
 
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple_split.png) <br />
 
-Note that the Replicates group here is just for showcase purpose. This is not a meaning group ID in our snRNA-seq dataset.
 
 #### Multiple genes/one group factor violin plot:
 ```
@@ -124,7 +138,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple_genes.png) <br />
 
 #### Multiple genes/multiple group factors.
-The violin plot will look too messy in this scenario so it is not included in plot1cell. It is highly recommended to use the complex_dot_plot instead. <br />
+The violin plot will look too messy in this scenario so it is not included in plot1cell. <br />
 
 ### 4. Umap geneplot across groups
 ```

@@ -9,6 +9,7 @@ complex_dotplot_multiple(
   features,
   celltypes = NULL,
   groups,
+  color.palette = NULL,
   strip.color = NULL
 )
 }
@@ -19,7 +20,9 @@ complex_dotplot_multiple(
 
 \item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
 
-\item{groups}{Group ID Must be one of the column names in the meta.data slot of the Seurat object.}
+\item{groups}{Group ID must be one of the column names in the meta.data slot of the Seurat object.}
+
+\item{color.palette}{Color for gene expression.}
 
 \item{strip.color}{Colors for the strip background}
 }

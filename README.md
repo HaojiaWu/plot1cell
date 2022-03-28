@@ -82,7 +82,7 @@ dev.off()
 ### In this example, "Phase" is a splitby factor for "Group" and "ReplicateID" is a splitby factor for "Replicates".
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_more_groups_split.png) <br />
-Note that the Replicates group here is just for showcase purpose. This is not a meaning group ID in our snRNA-seq dataset.
+Note that the Replicates group here is just for showcase purpose. This is not a meaningful group ID in our snRNA-seq dataset.
 
 To visualize multiple genes in dotplot format, ```complex_dotplot_multiple``` should be used.
 ```

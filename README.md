@@ -195,6 +195,7 @@ This package uses many methods from Seurat (https://github.com/satijalab/seurat)
     circlize,
     dplyr,
     ggplot2,
+    ggh4x,
     MASS,
     scales,
     progress,

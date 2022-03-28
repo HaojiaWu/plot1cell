@@ -49,7 +49,6 @@ complex_vlnplot_single <- function(
     gene_count[,allgroups[i]]<-factor(gene_count[,allgroups[i]],
                                       levels = group_level)
   }
-  max_exp<-max(gene_count[,feature])
   set.seed(seed = 42)
   noise <- rnorm(n = length(x = gene_count[,feature])) / 100000 ## This follows the same data processing for VlnPlot in Seurat
   gene_count[, feature]<-gene_count[,feature]+noise
@@ -60,14 +59,14 @@ complex_vlnplot_single <- function(
       xlab("") +
       ylab("") +
       ggtitle(feature)+
-      theme_bw() +
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
+      theme(panel.background = element_rect(fill = "white",colour = "black"),
+            axis.title = element_text(size = font.size), 
+            axis.text.x = element_text(size = font.size, angle = 45, hjust = 1, vjust = 1),
+            axis.text.y = element_text(size=(font.size-2)),
             strip.text = element_text( size = font.size),
-            axis.text.x = element_text(size=(font.size-2), angle = 45, hjust = 1, vjust = 1),
-            axis.title.y = element_text(size = font.size),
-            plot.title = element_text(size=font.size, face = "bold", hjust = 0.5),
-            legend.position = "none") 
+            legend.title = element_blank(),
+            legend.position = 'none',
+            plot.title = element_text(size=(font.size),face = "bold", hjust = 0.5))
     if(add.dot){
       p = p + geom_quasirandom(size=pt.size, alpha=0.2)
     }
@@ -82,9 +81,7 @@ complex_vlnplot_single <- function(
     }
     
   } else {
-    if(!is.null(splitby)){
-      stop("This function does not support spliting multiple groups. Plots will look too messy! Please select one group only in the 'groups' parameter if you want to use 'splitby'.")
-    }
+    if(is.null(splitby)){
     all_levels<-list()
     for(i in 1:length(groups)){
       if (is.null(levels(seu_obj@meta.data[,groups[i]]))){
@@ -114,6 +111,55 @@ complex_vlnplot_single <- function(
     }
     g <- change_strip_background(p, type = 'both',  strip.color = strip.color)
     print(grid::grid.draw(g))
+    } else {
+      count_list<-list()
+      for(i in 1:length(groups)){
+        df1<-gene_count[, c(groups[i],splitby[i],feature, "celltype")]
+        colnames(df1)[1:2]<-c("group","split")
+        df1$new_group<-groups[i]
+        count_list[[i]]<-df1
+      }
+      new_count<-do.call("rbind", count_list)
+      new_count$celltype<-factor(new_count$celltype, levels = celltypes)
+      group_level<-list()
+      for(i in 1:length(groups)){
+        if (is.null(levels(seu_obj@meta.data[,groups[i]]))){
+          seu_obj@meta.data[,groups[i]] <-factor(seu_obj@meta.data[,groups[i]], levels = names(table(seu_obj@meta.data[,groups[i]])))
+        }
+        group_level[[i]]<-levels(seu_obj@meta.data[,groups[i]])
+      }
+      group_level<-as.character(unlist(group_level))
+      new_count$group<-factor(new_count$group, levels=group_level)
+      fill_x1<-grDevices::rainbow(length(groups), alpha = 0.5)
+      fill_x2<-list()
+      for(i in 1:length(splitby)){
+        n_col<-unique(gene_count[, splitby[i]])
+        fill_x2[[i]]<-scales::hue_pal(l=90)(length(n_col))
+      }
+      fill_x2<-as.character(unlist(fill_x2))
+      fill_x <- c(fill_x1, fill_x2)
+      fill_y <- scales::hue_pal(l=90)(length(celltypes))
+      p<- ggplot(new_count, aes_string(x="group", y=feature, fill="group"))+
+        geom_violin(scale = 'width', adjust = 1, trim = TRUE, size=0.3, alpha=alpha, color="pink")+
+        xlab("") + ylab("") + ggtitle(feature) +
+        theme(panel.background = element_rect(fill = "white",colour = "black"),
+              axis.title = element_text(size = font.size), 
+              axis.text.x = element_text(size = font.size, angle = 45, hjust = 1, vjust = 1),
+              axis.text.y = element_text(size=(font.size-2)),
+              strip.text = element_text( size = font.size),
+              legend.title = element_blank(),
+              legend.position = 'none',
+              plot.title = element_text(size=(font.size),face = "bold", hjust = 0.5)) +
+        facet_nested(celltype ~ new_group + split, scales = "free_x", 
+                     strip = strip_nested( background_x = elem_list_rect(fill = fill_x),
+                                           background_y = elem_list_rect(fill = fill_y)))
+      if(add.dot){
+        p = p + geom_quasirandom(size=pt.size, alpha=0.2)
+        print(p)
+      } else {
+        p
+      }
+    }
   }
 }
 
@@ -162,7 +208,6 @@ complex_vlnplot_multiple <- function(
   group_level<-levels(seu_obj@meta.data[,group])
   gene_count[,group]<-factor(gene_count[,group],levels = group_level)
   for(i in 1:length(features)){
-    max_exp<-max(gene_count[,features[i]])
     set.seed(seed = 42)
     noise <- rnorm(n = length(x = gene_count[,features[i]])) / 100000 ## This follows the same data processing for VlnPlot in Seurat
     gene_count[, features[i]]<-gene_count[,features[i]]+noise

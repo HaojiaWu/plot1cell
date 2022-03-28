@@ -8,29 +8,35 @@ complex_dotplot_single(
   seu_obj,
   feature,
   celltypes = NULL,
-  groupby,
+  groups,
   splitby = NULL,
+  color.palette = NULL,
+  font.size = 12,
   strip.color = NULL,
   do.scale = T,
   scale.by = "radius"
 )
 }
 \arguments{
-\item{seu_obj}{A complete Seurat object}
+\item{seu_obj}{A complete Seurat object.}
 
 \item{feature}{Gene name. Only one gene is allowed.}
 
 \item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
 
-\item{groupby}{The group to show on x axis. One of the column names in meta.data.}
+\item{groups}{The group to show on x axis. One of the column names in meta.data.}
 
 \item{splitby}{The group to separate the gene expression. One of the column names in meta.data.}
 
-\item{strip.color}{Colors for the strip background}
+\item{color.palette}{Color for gene expression.}
+
+\item{font.size}{Font size for the labels.}
+
+\item{strip.color}{Colors for the strip background.}
 
 \item{do.scale}{Whether or not to scale the dot when percentage expression of the gene is less than 20.}
 
-\item{scale.by}{Methods to scale the dot size. "radius" or "size"}
+\item{scale.by}{Methods to scale the dot size. "radius" or "size".}
 }
 \value{
 A ggplot object

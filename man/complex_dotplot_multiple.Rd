@@ -8,7 +8,7 @@ complex_dotplot_multiple(
   seu_obj,
   features,
   celltypes = NULL,
-  groupby,
+  groups,
   strip.color = NULL
 )
 }
@@ -19,7 +19,7 @@ complex_dotplot_multiple(
 
 \item{celltypes}{Cell types to be included in the dot plot. Default: all cell types.}
 
-\item{groupby}{Group ID Must be one of the column names in the meta.data slot of the Seurat object.}
+\item{groups}{Group ID Must be one of the column names in the meta.data slot of the Seurat object.}
 
 \item{strip.color}{Colors for the strip background}
 }

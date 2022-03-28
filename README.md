@@ -90,17 +90,34 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single_split.png) <br />
 #### One gene/multiple group factors violin plot:
 ```
-png(filename =  'vlnplot_multiple.png', width = 6, height = 6,units = 'in', res = 200)
+png(filename =  'vlnplot_multiple.png', width = 6, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), font.size = 10)
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple.png) <br />
 
-Note that the Replicates group here is for demo purpose. This is not the mouse ID as reported in our original paper.
+Each group factor can be further splitted by its own factor by setting the splitby argument. Note that in this case, the order of the group factors needs to match the order of splitby factors. For example:
+```
+iri.integrated@meta.data$ReplicateID<-plyr::mapvalues(iri.integrated@meta.data$Replicates, from = names(table((iri.integrated@meta.data$Replicates))), to = c(rep("Rep1",3),rep("Rep2",3), rep("Rep3",1)))
+iri.integrated@meta.data$ReplicateID<-as.character(iri.integrated@meta.data$ReplicateID)
+
+png(filename =  'vlnplot_multiple_split.png', width = 7, height = 5,units = 'in', res = 200)
+complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),
+                        celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), 
+                        font.size = 10, splitby = c("Phase","ReplicateID"), pt.size=0.05)
+dev.off()
+
+### In this example, "Phase" is a splitby factor for "Group" and "ReplicateID" is a splitby factor for "Replicates".
+
+```
+
+![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple_split.png) <br />
+
+Note that the Replicates group here is just for showcase purpose. This is not a meaning group ID in our snRNA-seq dataset.
 
 #### Multiple genes/one group factor violin plot:
 ```
-png(filename =  'vlnplot_multiple_genes.png', width = 8, height = 6,units = 'in', res = 300)
+png(filename =  'vlnplot_multiple_genes.png', width = 6, height = 6,units = 'in', res = 300)
 complex_vlnplot_multiple(iri.integrated, features = c("Havcr1",  "Slc34a1", "Vcam1",   "Krt20"  , "Slc7a13", "Slc5a12"), celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), group = "Group", add.dot=T, pt.size=0.01, alpha=0.01, font.size = 10)
 dev.off()
 ```

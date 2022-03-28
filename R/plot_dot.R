@@ -6,13 +6,15 @@
 #' This function can be used for plotting a single gene expression across 
 #' different groups in a study with complex group design.
 #'
-#' @param seu_obj A complete Seurat object
+#' @param seu_obj A complete Seurat object.
 #' @param feature Gene name. Only one gene is allowed.
 #' @param celltypes Cell types to be included in the dot plot. Default: all cell types.
-#' @param groupby The group to show on x axis. One of the column names in meta.data.
+#' @param groups The group to show on x axis. One of the column names in meta.data.
 #' @param splitby The group to separate the gene expression. One of the column names in meta.data.
-#' @param scale.by Methods to scale the dot size. "radius" or "size"
-#' @param strip.color Colors for the strip background
+#' @param scale.by Methods to scale the dot size. "radius" or "size".
+#' @param color.palette Color for gene expression.
+#' @param strip.color Colors for the strip background.
+#' @param font.size Font size for the labels.
 #' @param do.scale Whether or not to scale the dot when percentage expression of the gene is less than 20.
 #' @return A ggplot object
 #' @export
@@ -20,81 +22,75 @@ complex_dotplot_single <- function(
   seu_obj, 
   feature, 
   celltypes=NULL,
-  groupby,
+  groups,
   splitby=NULL,
+  color.palette = NULL,
+  font.size = 12,
   strip.color=NULL,
   do.scale=T,
   scale.by='radius'
 ){
-  groupby_level<-levels(seu_obj@meta.data[,groupby])
-  if (is.null(groupby_level)){
-    seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = names(table(seu_obj@meta.data[,groupby])))
-    groupby_level<-levels(seu_obj@meta.data[,groupby])
+  groups_level<-levels(seu_obj@meta.data[,groups])
+  if (is.null(groups_level)){
+    seu_obj@meta.data[,groups] <-factor(seu_obj@meta.data[,groups], levels = names(table(seu_obj@meta.data[,groups])))
+    groups_level<-levels(seu_obj@meta.data[,groups])
   } 
-  if (sum(grepl("_", groupby_level))>0){
-    seu_obj@meta.data[,groupby]<-gsub("_","-",seu_obj@meta.data[,groupby])
-    groupby_level<-gsub("_","-",groupby_level)
-    seu_obj@meta.data[,groupby] <-factor(seu_obj@meta.data[,groupby], levels = groupby_level)
-  }
   if(is.null(celltypes)){
     celltypes<-levels(seu_obj)
   }
-  seu_obj<-subset(seu_obj,idents=celltypes)
-  celltypes<-gsub("_", "-", celltypes)
-  seu_obj@meta.data$celltype<-as.character(seu_obj@active.ident)
-  seu_obj@meta.data$celltype<-gsub("_", "-", seu_obj@meta.data$celltype)
-  seu_obj<-SetIdent(seu_obj, value='celltype')
-  levels(seu_obj)<-celltypes
+  if(is.null(color.palette)){
+    color.palette <- colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255)
+  }
   if(!is.null(splitby)){
     if (is.null(levels(seu_obj@meta.data[,splitby]))){
       seu_obj@meta.data[,splitby] <-factor(seu_obj@meta.data[,splitby], levels = names(table(seu_obj@meta.data[,splitby])))
     }
     splitby_level<-levels(seu_obj@meta.data[,splitby])
-    count_df<-extract_gene_count(seu_obj, features = feature, meta.groups = c(groupby,splitby))
-    count_df$new_group<-paste(count_df[,groupby], count_df[,"celltype"], count_df[,splitby],sep = "___")
-    exp_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){mean(expm1(x))})
-    pct_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){length(x[x > 0]) / length(x)})
+    count_df<-extract_gene_count(seu_obj, features = feature, cell.types = celltypes, meta.groups = c(groups,splitby))
+    count_df$new_group<-paste(count_df[,groups], count_df[,"celltype"], count_df[,splitby],sep = "___")
+    exp_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){mean(expm1(x))}) 
+    pct_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){length(x[x > 0]) / length(x)}) #This is the same data processing as Seurat
     colnames(exp_df)[2]<-"avg.exp"
     colnames(pct_df)[2]<-"pct.exp"
     data_plot<-merge(exp_df, pct_df, by='new_group')
-    data_plot$groupby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[1]]}))
+    data_plot$groups <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[1]]}))
     data_plot$celltype <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[2]]}))
     data_plot$splitby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[3]]}))
-    data_plot$groupby <- factor(data_plot$groupby, levels = groupby_level)
+    data_plot$groups <- factor(data_plot$groups, levels = groups_level)
     data_plot$splitby <- factor(data_plot$splitby, levels = splitby_level)
     data_plot$celltype <- factor(data_plot$celltype, levels = rev(celltypes))
   } else {
-  count_df<-extract_gene_count(seu_obj, features = feature, meta.groups = groupby)
-  count_df$new_group<-paste(count_df[,groupby], count_df[,"celltype"],sep = "_")
+  count_df<-extract_gene_count(seu_obj, features = feature, cell.types = celltypes, meta.groups = groups)
+  count_df$new_group<-paste(count_df[,groups], count_df[,"celltype"],sep = "___")
   exp_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){mean(expm1(x))})
   pct_df<-aggregate(.~new_group, data=count_df[,c('new_group',feature)], FUN=function(x){length(x[x > 0]) / length(x)})
   colnames(exp_df)[2]<-"avg.exp"
   colnames(pct_df)[2]<-"pct.exp"
   data_plot<-merge(exp_df, pct_df, by='new_group')
-  data_plot$groupby <- as.character(lapply(X=strsplit(data_plot$new_group, split = "_"),FUN = function(x){x[[1]]}))
-  data_plot$celltype <- as.character(lapply(X=strsplit(data_plot$new_group, split = "_"),FUN = function(x){x[[2]]}))
-  data_plot$groupby <- factor(data_plot$groupby, levels = groupby_level)
-  data_plot$celltype <- factor(data_plot$celltype, levels = celltypes)
+  data_plot$groups <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[1]]}))
+  data_plot$celltype <- as.character(lapply(X=strsplit(data_plot$new_group, split = "___"),FUN = function(x){x[[2]]}))
+  data_plot$groups <- factor(data_plot$groups, levels = groups_level)
+  data_plot$celltype <- factor(data_plot$celltype, levels = rev(celltypes))
   }
   scale.func <- switch(
     EXPR = scale.by,
     'size' = scale_size,
     'radius' = scale_radius,
     stop("'scale.by' must be either 'size' or 'radius'")
-  )
+  ) ### This function is from Seurat https://github.com/satijalab/seurat
   data_plot$pct.exp <- round(100 * data_plot$pct.exp, 2)
   data_plot$avg.exp <- scale(data_plot$avg.exp)
-  p<-ggplot(data_plot, aes(y = celltype, x = groupby)) +  
+  p<-ggplot(data_plot, aes(y = celltype, x = groups)) +  
     geom_tile(fill="white", color="white") +
     geom_point(aes( colour=avg.exp, size =pct.exp))  +  
-    scale_color_gradientn(colours  =  colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255))+ 
+    scale_color_gradientn(colours  =  color.palette )+ 
     theme(panel.background = element_rect(fill = "white", colour = "black"),
-          axis.text.x = element_text(angle = 45, hjust = 1),
-          plot.title = element_text(size = 16,hjust = 0.5, face = 'bold'),
-          axis.text = element_text(size = 12),
-          axis.title=element_text(size=8),
-          legend.text=element_text(size=8),
-          legend.title = element_text(size = 12),
+          axis.text.x = element_text(angle = 45, hjust = 1, size = font.size),
+          plot.title = element_text(size = (font.size +2), hjust = 0.5, face = 'bold'),
+          axis.text = element_text(size = font.size),
+          legend.text=element_text(size=(font.size-2)),
+          legend.title = element_text(size = (font.size)),
+          strip.text = element_text( size = font.size),
           legend.position="right")+
     ylab("")+xlab("")+ggtitle(feature)
   if(do.scale){
@@ -126,7 +122,7 @@ complex_dotplot_single <- function(
 #' @param seu_obj A complete Seurat object
 #' @param features A vector of gene names.
 #' @param celltypes Cell types to be included in the dot plot. Default: all cell types.
-#' @param groupby Group ID Must be one of the column names in the meta.data slot of the Seurat object.
+#' @param groups Group ID Must be one of the column names in the meta.data slot of the Seurat object.
 #' @param strip.color Colors for the strip background
 #' @return A ggplot object
 #' @export
@@ -134,7 +130,7 @@ complex_dotplot_multiple <- function(
   seu_obj, 
   features, 
   celltypes=NULL,
-  groupby, 
+  groups, 
   strip.color = NULL
   ){
  pb <- progress_bar$new(
@@ -143,7 +139,7 @@ complex_dotplot_multiple <- function(
  plot_list<-list()
  for(i in 1:length(features)){
   pp<-invisible(
-    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groupby = groupby, celltypes = celltypes)
+    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groups = groups, celltypes = celltypes)
   )
   pp<-pp$data
   pp$gene <- features[i]
@@ -155,7 +151,7 @@ complex_dotplot_multiple <- function(
   all_data$gene<-factor(all_data$gene, levels = rev(features)) 
   all_data$celltype <- factor(all_data$celltype, levels = levels(seu_obj))
   p <- invisible(
-    ggplot(all_data, aes(x = groupby, y = gene)) +  
+    ggplot(all_data, aes(x = groups, y = gene)) +  
     geom_tile(fill="white", color="white") +
     geom_point(aes( colour=avg.exp, size =pct.exp), alpha=0.9)  +  
     scale_color_gradientn(colours  =  grDevices::colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255))+ 

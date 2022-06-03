@@ -8,6 +8,15 @@ plot1cell R package can be easily installed from Github using devtools. Please m
 ```
 devtools::install_github("TheHumphreysLab/plot1cell")
 ## or the development version, devtools::install_github("HaojiaWu/plot1cell")
+
+## You might need to install the dependencies below if they are not available in your R library directory.
+bioc.packages <- c("biomaRt","GenomeInfoDb","EnsDb.Hsapiens.v86","GEOquery","simplifyEnrichment","ComplexHeatmap")
+BiocManager::install(bioc.packages)
+dev.packages <- c("chris-mcginnis-ucsf/DoubletFinder","Novartis/hdf5r","mojaveazure/loomR")
+devtools::install_github(dev.packages)
+## If you can't get the hdf5r package installed, please see the fix here:
+## https://github.com/hhoeflin/hdf5r/issues/94
+
 ```
 
 ## Usage

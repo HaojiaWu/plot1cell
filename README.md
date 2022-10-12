@@ -232,7 +232,7 @@ This package uses many methods from Seurat (https://github.com/satijalab/seurat)
     wordcloud,
     ComplexHeatmap
 ```
-### 9. Citation
+### 10. Citation
 Please consider citing our paper if you find ```plot1cell``` useful. <br />
 https://www.cell.com/cell-metabolism/fulltext/S1550-4131(22)00192-9 <br />
 **Cell Metab.** 2022 Jul 5;34(7):1064-1078.e6.<br />

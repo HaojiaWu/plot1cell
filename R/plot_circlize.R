@@ -55,7 +55,7 @@ get_metadata <- function(
 
 #' Make count matrix for the selected markers
 #'
-#' This function labels the cells based their expression levels of the selected 
+#' This function labels the cells based on their expression levels of the selected 
 #' marker genes.
 #'
 #' @param seu_obj SeuratObject
@@ -222,7 +222,7 @@ plot_circlize <- function(
 
 #' Add tracks to the circlize plot
 #'
-#' This function allows users to add more tracks into the circlize plot
+#' This function allows users to add more tracks onto the circlize plot
 #' @param data_plot Data for circlize plot 
 #' @param group The group to be shown on the new track
 #' @param colors Color palette to color the group

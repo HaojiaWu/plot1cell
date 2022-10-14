@@ -1,10 +1,10 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#' UpSet plot visualize the number of unique and shared DEGs across group 
+#' UpSet plot to visualize the number of unique and shared DEGs across group 
 #'
 #' This function takes Seurat object as input and visualize the genes that 
-#' are unique to a particular group or shared by multiple group. 
+#' are unique to a particular group or shared by multiple groups. 
 #' @param seu_obj A complete Seurat object.
 #' @param celltype The cell type to analyze.
 #' @param group Group factor in meta data.

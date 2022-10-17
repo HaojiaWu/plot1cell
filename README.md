@@ -5,7 +5,7 @@ This R package allows users to visualize the single cell data on the R object or
 ## Installation
 ```plot1cell``` R package can be easily installed from Github using devtools. Please make sure you have installed <a href="https://satijalab.org/seurat/">Seurat 4.0</a>, <a href="https://github.com/jokergoo/circlize">circlize</a> and <a href="https://github.com/jokergoo/ComplexHeatmap">ComplexHeatmap</a> packages.
 
-```
+```R
 devtools::install_github("TheHumphreysLab/plot1cell")
 ## or the development version, devtools::install_github("HaojiaWu/plot1cell")
 
@@ -21,7 +21,7 @@ devtools::install_github(dev.packages)
 
 ## Usage
 We provide some example codes to help generate figures from user's provided Seurat object. The Seurat object input to ```plot1cell``` should be a final object with complete clustering and cell type annotation. If a seurat object is not available, we suggest to use the demo data from Satija's lab (https://satijalab.org/seurat/articles/integration_introduction.html). To demonstrate the plotting functions in plot1cell, we re-created a Seurat object from our recent paper <a href="https://www.pnas.org/doi/10.1073/pnas.2005477117">Kirita et al, PNAS 2020</a> by integrating the count matrices we uploaded to GEO ([GSE139107](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE139107)).
-```
+```R
 library(plot1cell)
 iri.integrated <- Install.example() 
 
@@ -34,7 +34,7 @@ iri.integrated <- Install.example()
 ### 1. Circlize plot to visualize cell clustering and meta data
 This circlize plot was inspired by the data visualization in a published paper (Figure1, https://www.nature.com/articles/s41586-021-03775-x) from Linnarsson's lab.
 
-```
+```R
 ###Check and see the meta data info on your Seurat object
 colnames(iri.integrated@meta.data)  
 
@@ -56,14 +56,14 @@ dev.off()
 
 ### 2. Dotplot to show gene expression across groups
 Here is an example to use plot1cell to show one gene expression across different cell types in different groups.
-```
+```R
 png(filename =  'dotplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groups = "Group")
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single.png) <br />
 If the group factor can be classified by another factor, ```complex_dotplot_single``` allows splitting the group factor by another group factor too. Here is an example for demo.
-```
+```R
 iri.integrated@meta.data$Phase<-plyr::mapvalues(iri.integrated@meta.data$Group, from = levels(iri.integrated@meta.data$Group), to = c("Healthy",rep("Injury",3), rep("Recovery",2)))
 iri.integrated@meta.data$Phase<-as.character(iri.integrated@meta.data$Phase)
 png(filename =  'dotplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
@@ -73,7 +73,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_single_split.png) <br />
 
 To visualize the same gene on multiple group factors, simply add more group factor IDs to the ```groups``` argument.
-```
+```R
 png(filename =  'dotplot_more_groups.png', width = 8, height = 6,units = 'in', res = 100)
 complex_dotplot_single(seu_obj = iri.integrated, feature = "Havcr1",groups= c("Group","Replicates"))
 dev.off()
@@ -81,7 +81,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/dotplot_more_groups.png) <br />
 
 Each group factor can be further splitted by its own factor if the ```splitby``` argument is provided. Note that in this case, the order of the group factors needs to match the order of splitby factors.
-```
+```R
 iri.integrated@meta.data$ReplicateID<-plyr::mapvalues(iri.integrated@meta.data$Replicates, from = names(table((iri.integrated@meta.data$Replicates))), to = c(rep("Rep1",3),rep("Rep2",3), rep("Rep3",1)))
 iri.integrated@meta.data$ReplicateID<-as.character(iri.integrated@meta.data$ReplicateID)
 
@@ -94,7 +94,7 @@ dev.off()
 Note that the Replicates group here is just for showcase purpose. This is not a meaningful group ID in our snRNA-seq dataset.
 
 To visualize multiple genes in dotplot format, ```complex_dotplot_multiple``` should be used.
-```
+```R
 png(filename =  'dotplot_multiple.png', width = 10, height = 4,units = 'in', res = 300)
 complex_dotplot_multiple(seu_obj = iri.integrated, features = c("Slc34a1","Slc7a13","Havcr1","Krt20","Vcam1"),group = "Group", celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
 dev.off()
@@ -103,7 +103,7 @@ dev.off()
 
 ### 3. Violin plot to show gene expression across groups
 #### One gene/one group factor violin plot:
-```
+```R
 png(filename =  'vlnplot_single.png', width = 4, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"))
 dev.off()
@@ -112,14 +112,14 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single.png) <br />
 
 Similar to complex_dotplot_single, the complex_vlnplot_single function also allows splitting the group factor by another factor with the argument ```splitby```.
-```
+```R
 png(filename =  'vlnplot_single_split.png', width = 4, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = "Group",celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), splitby = "Phase")
 dev.off()
 ```
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_single_split.png) <br />
 #### One gene/multiple group factors violin plot:
-```
+```R
 png(filename =  'vlnplot_multiple.png', width = 6, height = 6,units = 'in', res = 100)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), font.size = 10)
 dev.off()
@@ -127,7 +127,7 @@ dev.off()
 ![alt text](https://github.com/HaojiaWu/Plot1cell/blob/master/data/vlnplot_multiple.png) <br />
 
 Similar to the functionality in complex_dotplot, each group factor can also be splitted by another factor in violin plot. For example:
-```
+```R
 png(filename =  'vlnplot_multiple_split.png', width = 7, height = 5,units = 'in', res = 200)
 complex_vlnplot_single(iri.integrated, feature = "Havcr1", groups = c("Group","Replicates"),
                         celltypes   = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), 
@@ -139,7 +139,7 @@ dev.off()
 
 
 #### Multiple genes/one group factor violin plot:
-```
+```R
 png(filename =  'vlnplot_multiple_genes.png', width = 6, height = 6,units = 'in', res = 300)
 complex_vlnplot_multiple(iri.integrated, features = c("Havcr1",  "Slc34a1", "Vcam1",   "Krt20"  , "Slc7a13", "Slc5a12"), celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), group = "Group", add.dot=T, pt.size=0.01, alpha=0.01, font.size = 10)
 dev.off()
@@ -150,7 +150,7 @@ dev.off()
 The violin plot will look too messy in this scenario so it is not included in plot1cell. <br />
 
 ### 4. Umap geneplot across groups
-```
+```R
 png(filename =  'data/geneplot_umap.png', width = 8, height = 6,units = 'in', res = 100)
 complex_featureplot(iri.integrated, features = c("Havcr1",  "Slc34a1", "Vcam1",   "Krt20"  , "Slc7a13"), group = "Group", select = c("Control","12hours","6weeks"), order = F)
 dev.off()
@@ -159,7 +159,7 @@ dev.off()
 
 ### 5. ComplexHeatmap to show unique genes across groups
 plot1cell can directly identify the condition specific genes in a selected cell type and plot those genes using ComplexHeatmap. An example is shown below:
-```
+```R
 iri.integrated$Group2<-plyr::mapvalues(iri.integrated$Group, from = c("Control", "4hours",  "12hours", "2days",   "14days" , "6weeks" ),
 to = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
 iri.integrated$Group2<-factor(iri.integrated$Group2, levels = c("Ctrl","Hr4","Hr12","Day2", "Day14","Wk6"))
@@ -171,7 +171,7 @@ dev.off()
 
 ### 6. Upset plot to show the unique and shared DEGs across groups.
 
-```
+```R
 png(filename =  'upset_plot.png', width = 8, height = 4,units = 'in', res = 300)
 complex_upset_plot(iri.integrated, celltype = "NewPT2", group = "Group", min_size = 10, logfc=0.5)
 dev.off()
@@ -180,7 +180,7 @@ dev.off()
 
 ### 7. Cell proportion change across groups
 
-```
+```R
 png(filename =  'cell_fraction.png', width = 8, height = 4,units = 'in', res = 300)
 plot_cell_fraction(iri.integrated,  celltypes = c("PTS1" ,   "PTS2"  ,  "PTS3"  ,  "NewPT1" , "NewPT2"), groupby = "Group", show_replicate = T, rep_colname = "orig.ident")
 dev.off()
@@ -190,7 +190,7 @@ dev.off()
 
 ### 8. Other ploting functions
 There are other functions for plotting/data processing in plot1cell. 
-```
+```R
 help(package = plot1cell)
 ```
 Many more functions will be added in the future package development. For questions, please raise an issue in this github page or contact <a href="https://humphreyslab.com">TheHumphreysLab</a>. 
@@ -198,7 +198,7 @@ Many more functions will be added in the future package development. For questio
 ### 9. Attributions
 This package uses many methods from Seurat (https://github.com/satijalab/seurat) to process the data for ploting. The circlize and heatmap plots were generated by the circlize (https://github.com/jokergoo/circlize) and ComplexHeatmap (https://github.com/jokergoo/ComplexHeatmap) packages. The Upset plot was generated by the ComplexUpset package (https://github.com/krassowski/complex-upset). Most of other graphs were generated using ggplot2 (https://github.com/tidyverse/ggplot2). The package benefits from the following dependencies.
 
-```
+```R
     Seurat,
     plotly,
     circlize,

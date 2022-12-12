@@ -17,8 +17,8 @@ creat_cellphonedb_file <- function(seu_obj, group){
       seu_obj@assays$RNA@data)
   )
   mouse_genes<-rownames(counts)
-  human = useMart("ensembl", dataset = "hsapiens_gene_ensembl") 
-  mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+  human <- useMart("ensembl", dataset = "hsapiens_gene_ensembl", host = "https://dec2021.archive.ensembl.org/") 
+  mouse <- useMart("ensembl", dataset = "mmusculus_gene_ensembl", host = "https://dec2021.archive.ensembl.org/")
   genesV2 = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", 
                    values = mouse_genes , mart = mouse, attributesL = c("hgnc_symbol",'ensembl_gene_id'), 
                    martL = human, uniqueRows=F)

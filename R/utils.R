@@ -146,10 +146,10 @@ convert_geneid <- function(
   species
   ){
   if (species == "mouse") {
-    mart = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+    mart = useMart("ensembl", dataset = "mmusculus_gene_ensembl", host = "https://dec2021.archive.ensembl.org/") 
   }
   else if (species == "human") {
-    mart = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+    mart = useMart("ensembl", dataset = "hsapiens_gene_ensembl", host = "https://dec2021.archive.ensembl.org/") 
   }
   else {
     print("Please specify a species!")

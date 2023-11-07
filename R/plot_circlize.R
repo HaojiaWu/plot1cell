@@ -226,13 +226,15 @@ plot_circlize <- function(
 #' @param data_plot Data for circlize plot 
 #' @param group The group to be shown on the new track
 #' @param colors Color palette to color the group
+#' @param track_lwd The width of the track. Default:3
 #' @param track_num Which number this track is? Value is integer and starts with 2 for the 2nd track, track_num=3 for the 3rd track, etc...
 #' @return A new circlize track adding to the current circlize plot
 #' @export
 add_track <- function(
   data_plot, 
   group, 
-  track_num, 
+  track_num,
+  track_lwd = 3,
   colors = NULL
   ){
   if(track_num<2){
@@ -256,7 +258,7 @@ add_track <- function(
     scale_factor<-max(data_plot_cl$x_polar2)/nrow(data_plot_cl)
     dat_seg<-scale_factor*dat_seg
     dat_seg2<-scale_factor*dat_seg2
-    circos.segments(x0 = dat_seg, y0 = 0, x1 = dat_seg2, y1 = 0, col = col_group_cl, sector.index = celltypes[i], lwd=3)
+    circos.segments(x0 = dat_seg, y0 = 0, x1 = dat_seg2, y1 = 0, col = col_group_cl, sector.index = celltypes[i], lwd=track_lwd)
   }
   text(x = (1-0.03*(track_num-1)), y=0.1, labels = group, cex = 0.4, col = 'black',srt=-90)
 }

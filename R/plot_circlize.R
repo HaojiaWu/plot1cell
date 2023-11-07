@@ -246,14 +246,17 @@ add_track <- function(
   } else {
     col_group = colors
   }
+  names(col_group) <- group_names
   for(i in 1:length(celltypes)) {
-    data_plot_cl<-data_plot[data_plot$Cluster==celltypes[i],]
-    dat_seg<-get_segment(data_plot_cl, group = group)
-    dat_seg2<-c(dat_seg[-1]-1, nrow(data_plot_cl))
+    data_plot_cl <- data_plot[data_plot$Cluster==celltypes[i],]
+    group_names_cl <- names(table(data_plot_cl[,group]))
+    col_group_cl <- as.character(col_group[group_names_cl])
+    dat_seg <- get_segment(data_plot_cl, group = group)
+    dat_seg2 <- c(dat_seg[-1]-1, nrow(data_plot_cl))
     scale_factor<-max(data_plot_cl$x_polar2)/nrow(data_plot_cl)
     dat_seg<-scale_factor*dat_seg
     dat_seg2<-scale_factor*dat_seg2
-    circos.segments(x0 = dat_seg, y0 = 0, x1 = dat_seg2, y1 = 0, col = col_group, sector.index = celltypes[i], lwd=3)
+    circos.segments(x0 = dat_seg, y0 = 0, x1 = dat_seg2, y1 = 0, col = col_group_cl, sector.index = celltypes[i], lwd=3)
   }
   text(x = (1-0.03*(track_num-1)), y=0.1, labels = group, cex = 0.4, col = 'black',srt=-90)
 }

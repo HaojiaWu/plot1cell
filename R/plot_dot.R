@@ -16,6 +16,8 @@
 #' @param strip.color Colors for the strip background.
 #' @param font.size Font size for the labels.
 #' @param do.scale Whether or not to scale the dot when percentage expression of the gene is less than 20.
+#' @param vmin Clip lower limit for gene expression value (after z-scaling).
+#' @param vmax Clip upper limit for gene expression value (after z-scaling).
 #' @return A ggplot object
 #' @export
 
@@ -29,8 +31,15 @@ complex_dotplot_single <- function(
   font.size = 12,
   strip.color=NULL,
   do.scale=T,
-  scale.by='radius'
+  scale.by='radius',
+  vmin = NULL, 
+  vmax = NULL
 ){
+  .clip_vals <- function(x, vmin = NULL, vmax = NULL){
+      if(!is.null(vmin)) x[x < vmin] <- vmin
+      if(!is.null(vmax)) x[x > vmax] <- vmax
+      x
+    }
   if(is.null(color.palette)){
     color.palette <- colorRampPalette(c('grey80','lemonchiffon1','indianred1','darkred'))(255)
   }
@@ -83,6 +92,7 @@ complex_dotplot_single <- function(
     }
     data_plot$pct.exp <- round(100 * data_plot$pct.exp, 2)
     data_plot$avg.exp <- scale(data_plot$avg.exp)
+    data_plot$avg.exp <- .clip_vals(data_plot$avg.exp, vmin, vmax)
     p<-ggplot(data_plot, aes(y = celltype, x = groups)) +  
       geom_tile(fill="white", color="white") +
       geom_point(aes( colour=avg.exp, size =pct.exp))  +  
@@ -92,10 +102,15 @@ complex_dotplot_single <- function(
             plot.title = element_text(size = (font.size +2), hjust = 0.5, face = 'bold'),
             axis.text = element_text(size = font.size),
             legend.text=element_text(size=(font.size-2)),
+            legend.key = element_rect(fill = NA, colour = NA) ,
             legend.title = element_text(size = (font.size)),
             strip.text = element_text( size = font.size),
             legend.position="right")+
-      ylab("")+xlab("")+ggtitle(feature)
+      ylab("")+xlab("")+ggtitle(feature)+ guides(
+  size = guide_legend(
+    override.aes = list(shape = 21, fill = NA, colour = "black") 
+  )
+)
     if(do.scale){
       p = p + scale_size(range = c(0, 10))
     } else {
@@ -153,6 +168,8 @@ complex_dotplot_single <- function(
     data_plot$groupID <- factor(data_plot$groupID, levels = groups)
     data_plot$pct.exp <- round(100 * data_plot$pct.exp, 2)
     data_plot$avg.exp <- scale(data_plot$avg.exp)
+    data_plot$avg.exp <- .clip_vals(data_plot$avg.exp, vmin, vmax)
+
     if(is.null(splitby)){
       p<-ggplot(data_plot, aes(y = celltype, x = groups)) +  
         geom_tile(fill="white", color="white") +
@@ -164,9 +181,14 @@ complex_dotplot_single <- function(
               axis.text = element_text(size = font.size),
               legend.text=element_text(size=(font.size-2)),
               legend.title = element_text(size = (font.size)),
+              legend.key = element_rect(fill = NA, colour = NA) ,
               strip.text = element_text( size = font.size),
               legend.position="right")+
-        ylab("")+xlab("")+ggtitle(feature)+facet_wrap(~groupID, scales = 'free_x')
+        ylab("")+xlab("")+ggtitle(feature)+facet_wrap(~groupID, scales = 'free_x')+ guides(
+  size = guide_legend(
+    override.aes = list(shape = 21, fill = NA, colour = "black") 
+  )
+)
       if(do.scale){
         p = p + scale_size(range = c(0, 10))
       } else {
@@ -208,12 +230,17 @@ complex_dotplot_single <- function(
               plot.title = element_text(size = (font.size +2), hjust = 0.5, face = 'bold'),
               axis.text = element_text(size = font.size),
               legend.text=element_text(size=(font.size-2)),
+              legend.key = element_rect(fill = NA, colour = NA) ,
               legend.title = element_text(size = (font.size)),
               strip.text = element_text( size = font.size),
               legend.position="right")+
         ylab("")+xlab("")+ggtitle(feature)+
         facet_nested(~ groupID + split, scales = "free_x", 
-                     strip = strip_nested( background_x = elem_list_rect(fill = fill_x)))
+                     strip = strip_nested( background_x = elem_list_rect(fill = fill_x)))+ guides(
+  size = guide_legend(
+    override.aes = list(shape = 21, fill = NA, colour = "black") 
+  )
+)
       if(do.scale){
         p = p + scale_size(range = c(0, 10))
       } else {
@@ -241,6 +268,9 @@ complex_dotplot_single <- function(
 #' @param groups Group ID must be one of the column names in the meta.data slot of the Seurat object.
 #' @param color.palette Color for gene expression.
 #' @param strip.color Colors for the strip background
+#' @param vmin Clip lower limit for gene expression value (after z-scaling).
+#' @param vmax Clip upper limit for gene expression value (after z-scaling).
+#' @param strip.alpha Set transparency for the strip.color
 #' @return A ggplot object
 #' @export
 
@@ -250,7 +280,10 @@ complex_dotplot_multiple <- function(
   celltypes=NULL,
   groups, 
   color.palette = NULL,
-  strip.color = NULL
+  strip.color = NULL,
+  vmin = NULL, 
+  vmax = NULL,
+  strip.alpha =1
   ){
  pb <- progress_bar$new(
    format = "  Ploting [:bar] :percent eta: :eta",
@@ -258,7 +291,7 @@ complex_dotplot_multiple <- function(
  plot_list<-list()
  for(i in 1:length(features)){
   pp<-invisible(
-    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groups = groups, celltypes = celltypes)
+    complex_dotplot_single(seu_obj = seu_obj, feature = features[i], groups = groups, celltypes = celltypes, vmin = vmin, vmax = vmax)
   )
   pp<-pp$data
   pp$gene <- features[i]
@@ -280,18 +313,24 @@ complex_dotplot_multiple <- function(
     scale_size(range = c(0, 10))+
     theme(panel.background = element_rect(fill = "white", colour = "black"),
           axis.text.x = element_text(angle = 45, hjust = 1),
+          axis.text.y = element_text(size=16),
           plot.title = element_text(size = 16,hjust = 0.5, face = 'bold'),
           axis.text = element_text(size = 12),
           axis.title=element_text(size=8),
           legend.text=element_text(size=8),
+          legend.key = element_rect(fill = NA, colour = NA) ,
           legend.title = element_text(size = 12),
           legend.position="right",
           strip.text = element_text(size = 14,colour = 'black',face = 'bold'))+
     ylab("")+xlab("")+ggtitle('')+
-    facet_wrap(~celltype, ncol = length(levels(seu_obj)))
+    facet_wrap(~celltype, ncol = length(levels(seu_obj))) + guides(
+  size = guide_legend(
+    override.aes = list(shape = 21, fill = NA, colour = "black") 
   )
+)
+  )
+  if (!is.null(strip.color)) strip.color <- scales::alpha(strip.color, strip.alpha)
   g <- change_strip_background(p, type = 'top',  strip.color = strip.color)
   print(grid.draw(g))
 }
-
 

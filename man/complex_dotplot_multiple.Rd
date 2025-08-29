@@ -10,7 +10,10 @@ complex_dotplot_multiple(
   celltypes = NULL,
   groups,
   color.palette = NULL,
-  strip.color = NULL
+  strip.color = NULL,
+  vmin = NULL,
+  vmax = NULL,
+  strip.alpha = 1
 )
 }
 \arguments{
@@ -25,6 +28,12 @@ complex_dotplot_multiple(
 \item{color.palette}{Color for gene expression.}
 
 \item{strip.color}{Colors for the strip background}
+
+\item{vmin}{Clip lower limit for gene expression value (after z-scaling).}
+
+\item{vmax}{Clip upper limit for gene expression value (after z-scaling).}
+
+\item{strip.alpha}{Set transparency for the strip.color}
 }
 \value{
 A ggplot object

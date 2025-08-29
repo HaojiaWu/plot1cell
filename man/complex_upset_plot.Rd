@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_upset.R
 \name{complex_upset_plot}
 \alias{complex_upset_plot}
-\title{UpSet plot visualize the number of unique and shared DEGs across group}
+\title{UpSet plot to visualize the number of unique and shared DEGs across group}
 \usage{
 complex_upset_plot(seu_obj, celltype, group, logfc = 0.5, min_size = 1)
 }
@@ -22,5 +22,5 @@ An UpSet plot
 }
 \description{
 This function takes Seurat object as input and visualize the genes that
-are unique to a particular group or shared by multiple group.
+are unique to a particular group or shared by multiple groups.
 }

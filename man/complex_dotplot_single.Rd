@@ -14,7 +14,9 @@ complex_dotplot_single(
   font.size = 12,
   strip.color = NULL,
   do.scale = T,
-  scale.by = "radius"
+  scale.by = "radius",
+  vmin = NULL,
+  vmax = NULL
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ complex_dotplot_single(
 \item{do.scale}{Whether or not to scale the dot when percentage expression of the gene is less than 20.}
 
 \item{scale.by}{Methods to scale the dot size. "radius" or "size".}
+
+\item{vmin}{Clip lower limit for gene expression value (after z-scaling).}
+
+\item{vmax}{Clip upper limit for gene expression value (after z-scaling).}
 }
 \value{
 A ggplot object

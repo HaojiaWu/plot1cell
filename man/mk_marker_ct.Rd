@@ -15,6 +15,6 @@ mk_marker_ct(seu_obj, features)
 A dataframe with cells labeled by marker genes
 }
 \description{
-This function labels the cells based their expression levels of the selected
+This function labels the cells based on their expression levels of the selected
 marker genes.
 }
